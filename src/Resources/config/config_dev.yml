@@ -1,0 +1,6 @@
+imports:
+  - { resource: config.yml }
+
+framework:
+  router:
+    strict_requirements: true

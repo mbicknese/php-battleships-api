@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+
+cd "$(dirname "$0")/.."
+rm -rf reports/*
+mkdir -p reports/php reports/php/coverage
+BUILD_STATE=0
+
+function check_state {
+    echo --------------------------------------------------------------------------------
+    echo $@
+    echo
+    $@
+    BUILD_STATE=$((BUILD_STATE+$?))
+}
+
+check_state ./vendor/bin/phploc \
+    --count-tests \
+    --log-csv reports/php/phploc.csv \
+    --log-xml reports/php/phploc.xml \
+    src
+
+check_state ./vendor/bin/phpcs --report=full \
+    --report-checkstyle=reports/php/checkstyle.xml \
+    --standard=PSR2 \
+    --extensions=php \
+    --ignore=autoload.php \
+    src
+
+check_state ./vendor/bin/phpunit \
+    --coverage-clover reports/php/clover.xml \
+    --coverage-crap4j reports/php/crap4j.xml \
+    --log-junit reports/php/junit.xml \
+    --coverage-html reports/php/coverage
+
+echo
+echo
+if [ "$BUILD_STATE" -eq 0 ]; then
+    echo "Build is STABLE"
+else
+    echo "Build is UNSTABLE"
+fi
+exit $BUILD_STATE

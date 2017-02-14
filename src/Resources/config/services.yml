@@ -1,0 +1,8 @@
+services:
+  controller.item:
+    class: App\Controller\ItemController
+    arguments: ["@repository.item"]
+  repository.item:
+    class: Doctrine\ORM\EntityRepository
+    factory: ["@doctrine.orm.default_entity_manager", getRepository]
+    arguments: [ App\Entity\Item ]
