@@ -1,17 +1,20 @@
 <?php
-
 namespace App;
 
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
-use Symfony\Bundle\TwigBundle\TwigBundle;
-use Symfony\Bundle\WebProfilerBundle\WebProfilerBundle;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Routing\RouteCollectionBuilder;
 
+/**
+ * Class AppKernel
+ *
+ * @package App
+ * @author  Maarten Bicknese <maarten.bicknese@devmob.com>
+ */
 class AppKernel extends Kernel
 {
     use MicroKernelTrait;
@@ -19,17 +22,12 @@ class AppKernel extends Kernel
     /**
      * @return array
      */
-    public function registerBundles()
+    public function registerBundles(): array
     {
-        $bundles = array(
+        $bundles = [
             new FrameworkBundle(),
-            new TwigBundle(),
             new DoctrineBundle(),
-        );
-
-        if ($this->getEnvironment() == 'dev') {
-            $bundles[] = new WebProfilerBundle();
-        }
+        ];
 
         return $bundles;
     }
@@ -37,15 +35,15 @@ class AppKernel extends Kernel
     /**
      * @return string
      */
-    public function getCacheDir()
+    public function getCacheDir(): string
     {
-        return '/dev/shm/cache/'.$this->getEnvironment();
+        return '/dev/shm/cache/' . $this->getEnvironment();
     }
 
     /**
      * @return string
      */
-    public function getLogDir()
+    public function getLogDir(): string
     {
         return '/dev/shm/logs';
     }
@@ -54,31 +52,17 @@ class AppKernel extends Kernel
      * @param ContainerBuilder $c
      * @param LoaderInterface  $loader
      */
-    protected function configureContainer(ContainerBuilder $c, LoaderInterface $loader)
+    protected function configureContainer(ContainerBuilder $c, LoaderInterface $loader): void
     {
-        $loader->load(__DIR__.'/Resources/config/config_'.$this->getEnvironment().'.yml');
-        $loader->load(__DIR__.'/Resources/config/services.yml');
-
-        // configure WebProfilerBundle only if the bundle is enabled
-        if (isset($this->bundles['WebProfilerBundle'])) {
-            $c->loadFromExtension('web_profiler', array(
-                'toolbar' => true,
-                'intercept_redirects' => false,
-            ));
-        }
+        $loader->load(__DIR__ . '/Resources/config/config_' . $this->getEnvironment() . '.yml');
+        $loader->load(__DIR__ . '/Resources/config/services.yml');
     }
 
     /**
      * @param RouteCollectionBuilder $routes
      */
-    protected function configureRoutes(RouteCollectionBuilder $routes)
+    protected function configureRoutes(RouteCollectionBuilder $routes): void
     {
-        // import the WebProfilerRoutes, only if the bundle is enabled
-        if (isset($this->bundles['WebProfilerBundle'])) {
-            $routes->import('@WebProfilerBundle/Resources/config/routing/wdt.xml', '/_wdt');
-            $routes->import('@WebProfilerBundle/Resources/config/routing/profiler.xml', '/_profiler');
-        }
-
         // load the annotation routes
         $routes->add('/', 'controller.item:index', 'home');
     }
