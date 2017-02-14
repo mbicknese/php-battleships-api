@@ -1,0 +1,15 @@
+App\Entity\Item:
+  type: entity
+  table: items
+  repositoryClass: App\Repository\ItemRepository
+  id:
+    id:
+      type: integer
+      generator:
+        strategy: AUTO
+      options:
+        unsigned: true
+  fields:
+    name:
+      type: string
+      length: 50

@@ -1,0 +1,30 @@
+version: '2.0'
+
+volumes:
+  db:
+    driver: local
+
+services:
+  db:
+    image: mariadb:10.1
+    environment:
+      MYSQL_ROOT_PASSWORD: pass
+      MYSQL_DATABASE: symfony
+      MYSQL_USER: symfony
+      MYSQL_PASSWORD: symfony
+    volumes:
+    - "db:/var/lib/mysql"
+  app:
+    image: yoshz/symfony-docker-bootstrap-app
+    environment:
+      DB_DRIVER: pdo_mysql
+      DB_HOST: db
+      DB_NAME: symfony
+      DB_USER: symfony
+      DB_PASSWORD: symfony
+  web:
+    image: yoshz/symfony-docker-bootstrap-web
+    ports:
+    - "80:80"
+    depends_on:
+    - app
