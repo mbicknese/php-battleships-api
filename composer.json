@@ -1,5 +1,7 @@
 {
-    "name": "yoshz/symfony-docker-bootstrap",
+    "name": "mbicknese/php-battleships-api",
+    "description": "API for the Battleships game, implemented in PHP.",
+    "license": "MIT",
     "type": "project",
     "autoload": {
         "psr-4": { "App\\": "src/" }
