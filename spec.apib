@@ -1,0 +1,189 @@
+FORMAT: 1A
+HOST: https://private-a144e-battleships1.apiary-mock.com
+
+# Battleships
+
+Battleships API is a simple API to play the game Battleships.
+
+A game is followed in the following sequence:
+ 1. Two **player**s join a **match**.
+ 2. Each player has its own **grid**.
+ 3. Each player places all of its **ship**s on its own grid.
+ 4. Players take turns
+   * In a turn a player fires **shot**s at the opponents grid.
+   * On **hit**ting the opposing players ship, the player may fire a consecutive shot.
+   * On **miss**ing all of the opposing players ships, the turn ends.
+ 5. When all grid spaces of a ship have been hit, the ship has been **sunk**.
+ 6. First player to sink all the oponents ships, wins.
+ 
+## TODO
+
+ * Communicate between server and application using SSE
+ * Communicate between server and application using WebSockets
+
+## Playing the game
+
+### Join a match [GET /match]
+To play in a game, one first has to join a match. You can be either the first (0) or the
+second (1) participant. The header contains the JWT to use on further POST requests. The
+response contains:
++ **player** *(number)* - whether you're the first or second player, useful to determine whether it is your turn.
++ **id** *(string)* - id of the match
+
++ Response 201 (application/json)
+    
+    + Body
+    
+            {
+                "player": 1,
+                "id": "-KcSKrUV5pqaYwUcwVZP"
+            }
+        
+    + Headers
+    
+            Authentication: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJCYXR0bGVzaGlwcyIsImlhdCI6MTQ4NjU1MTEzMCwiZXhwIjoxNTE4MDg3MTgwLCJhdWQiOiJiYXR0bGVzaGlwcy5hcGlibHVlcHJpbnQub3JnIiwic3ViIjoiMSIsIm1hdGNoIjoiLUtjU0tyVVY1cHFhWXdVY3dWWlAiLCJwbGF5ZXIiOiIxIn0.2ZOULT-tSoGBFr85XgX5xL51g0NvY8gW37Dx4N3TWk4
+            Location: /match/-KcSKrUV5pqaYwUcwVZP
+
+### Current state of a match [GET /match/{id}]
+Retrieve the state of a running or finished match. We suggest you poll this resource to
+sync the match state. A match consists of:
+
++ **phase** *(number)*
+    1. One or both players have not placed (all) their ships yet.
+    2. Player indicated by *current_player* can take a shot.
+    3. Player indicated by *current_player* has won the game.
++ **current_player** *(number)*
++ **ships** *(array[number])* - Amount and length of ships
++ **grid** *(array[number])* - Width and length of the grid respectively
++ **shots** *(array)*
+
++ Attributes
+
+        + id (required, string) - The unique id of a match (usually retrieved by joining a match)
+
++ Response 200 (application/json)
+
+    + Body
+    
+            {
+                "phase": 1,
+                "current_player": 0,
+                "ships": [5, 4, 3, 3, 2],
+                "grid": [15, 15],
+                "shots": [
+                    {
+                        "x": 2,
+                        "y": 9,
+                        "hit": false,
+                        "sunk": false,
+                        "side": 0
+                    },
+                    {
+                        "x": 2,
+                        "y": 9,
+                        "hit": true,
+                        "sunk": false,
+                        "side": 1
+                    }
+                ]
+            }
+
++ Response 404
+
+### Placing a ship [POST /ship]
+Places a ship on your own grid. Make sure the shot coordination (zero based) are within
+bounds of the grid.
+
+**Rules of placing a ship:**
++ Ships must be placed either horizontally or vertically, not diagonally.
++ A ship can only be placed once.
++ Ships cannot be moved.
++ A ship must be placed within the bounds of the grid.
++ A ship cannot touch another ship. (might change this later, but it makes things easier)
+
++ Attributes
+    
+        + start_x (required, number)
+        + start_y (required, number)
+        + end_x (required, number)
+        + end_y (required, number)
+
++ Response 200
+    
+    + Request
+        + Headers
+            
+                Authentication: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJCYXR0bGVzaGlwcyIsImlhdCI6MTQ4NjU1MTEzMCwiZXhwIjoxNTE4MDg3MTgwLCJhdWQiOiJiYXR0bGVzaGlwcy5hcGlibHVlcHJpbnQub3JnIiwic3ViIjoiMSIsIm1hdGNoIjoiLUtjU0tyVVY1cHFhWXdVY3dWWlAiLCJwbGF5ZXIiOiIxIn0.2ZOULT-tSoGBFr85XgX5xL51g0NvY8gW37Dx4N3TWk4
+
+    + Body
+
+
++ Response 400 (text/plain)
+
+    + Body
+        
+            For once, please, stick to the rules!
+            
++ Response 401
+
+    + Headers
+            
+            WWW-Authenticate: Bearer
+
++ Response 403 (text/plain)
+Returned when accessing this resource after phase 1.
+
+    + Body
+        
+            There's a time to place ships and a time to blow up ships. You just blew your change to place ships.
+
+### Making a shot [POST /shot]
+Makes a shot at the opposing players grid. Make sure the shot coordination (zero based) are
+within bounds of the grid. On a 200 response and **hit**, make another POST request with new
+coordinates to fire the next shot.
+
+Response contains:
++ **x** *(number)*
++ **y** *(number)*
++ **hit** *(boolean)*
++ **sunk** *(boolean)* - When hit, indicates if it sunk a ship
+
++ Attributes
+    
+        + x (required, number)
+        + y (required, number)
+
++ Response 200 (application/json)
+    
+    + Request
+        + Headers
+            
+                Authentication: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJCYXR0bGVzaGlwcyIsImlhdCI6MTQ4NjU1MTEzMCwiZXhwIjoxNTE4MDg3MTgwLCJhdWQiOiJiYXR0bGVzaGlwcy5hcGlibHVlcHJpbnQub3JnIiwic3ViIjoiMSIsIm1hdGNoIjoiLUtjU0tyVVY1cHFhWXdVY3dWWlAiLCJwbGF5ZXIiOiIxIn0.2ZOULT-tSoGBFr85XgX5xL51g0NvY8gW37Dx4N3TWk4
+
+    + Body
+    
+            {
+                "x": 2,
+                "y": 9,
+                "hit": true,
+                "sunk": false
+            }
+
+
++ Response 400 (text/plain)
+
+    + Body
+        
+            Exception: shot out of bounds
+            
++ Response 401
+
+    + Headers
+            
+            WWW-Authenticate: Bearer
+
++ Response 403 (text/plain)
+
+    + Body
+        
+            It is not your turn to shoot, sailor!
