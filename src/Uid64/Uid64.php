@@ -20,7 +20,7 @@ namespace App\Uid64;
  *    not rely on that.)
  *  - Making it possible to retrieve creation date when lost.
  *
- * The max value for a 64 bit int is: 18446744073709551615
+ * The max value for a 64 bit unsigned integer is: 18446744073709551615
  * Which is 20 characters.
  *
  * A year contains: 31536000000 milliseconds
@@ -30,7 +30,7 @@ namespace App\Uid64;
  * 41 bits can store the number 2199023255551.
  * 2199023255551 / 31536000000 = 69,730570000983004
  *
- * Leaving us with 23 bits for randomness. Giving us a 1 / 8388607 per
+ * Leaving us with 23 bits for randomness. Giving us a 1 / 8,388,607 per
  * milliseconds chance for collision. A chance, I'm willing to take.
  */
 final class Uid64
@@ -55,7 +55,7 @@ final class Uid64
     public static function new(): string
     {
         $time = self::currentTimeInMilliseconds();
-        $binStrTime = str_pad(decbin($time), 41, '0', STR_PAD_LEFT);
+        $binStrTime = decbin($time);
         $random = rand(0, 8388607);
         $binStrRandom = str_pad(decbin($random), 23, '0', STR_PAD_LEFT);
 
@@ -80,5 +80,17 @@ final class Uid64
     {
         $microTime = microtime(true) - self::UNIX_TIME_OFFSET;
         return round($microTime * 1000);
+    }
+
+    /**
+     * @param string $test
+     * @return bool
+     */
+    public static function isUid64(string $test): bool
+    {
+        return (
+            preg_match('/^[0-9]/', $test) &&
+            strlen(base_convert($test, 10, 2)) <= 63
+        );
     }
 }

@@ -23,4 +23,13 @@ class Uid64Test extends TestCase
 
         $this->assertInternalType('string', $id);
     }
+
+    public function testIsUid64()
+    {
+        $this->assertTrue(Uid64::isUid64('9223372036854775807'), 'Max int value is a valid UID64');
+        $this->assertTrue(Uid64::isUid64('0'), 'zero (0) is a valid UID64');
+        $this->assertFalse(Uid64::isUid64('9223372036854775808'), 'One more than max in is not a valid UID64');
+        $this->assertFalse(Uid64::isUid64('-1'), '-1 is not a valid UID64');
+        $this->assertFalse(Uid64::isUid64('a'), 'a letter is not a valid UID64');
+    }
 }
