@@ -65,7 +65,11 @@ final class Uid64
     public static function toText(string $uid64): string
     {
         self::checkPreconditions();
-        return base_convert($uid64, 2, 36);
+        if (!self::isUid64($uid64)) {
+            throw new InvalidUid64Exception();
+        }
+
+        return base_convert($uid64, 10, 36);
     }
 
     /**
