@@ -19,19 +19,6 @@ namespace App\Uid64;
  *  - Making sort by id the same as sort by creation date (though you should
  *    not rely on that.)
  *  - Making it possible to retrieve creation date when lost.
- *
- * The max value for a 64 bit unsigned integer is: 18446744073709551615
- * Which is 20 characters.
- *
- * A year contains: 31536000000 milliseconds
- * If we were to use 41 bits for storing the timestamp, we can create ids for
- * roughly the next 70 years.
- *
- * 41 bits can store the number 2199023255551.
- * 2199023255551 / 31536000000 = 69,730570000983004
- *
- * Leaving us with 23 bits for randomness. Giving us a 1 / 8,388,607 per
- * milliseconds chance for collision. A chance, I'm willing to take.
  */
 final class Uid64
 {
@@ -51,11 +38,18 @@ final class Uid64
      *   values otherwise which could lead to false assumptions in applications.
      *
      * @return string
+     * @throws Uid64ExpiredException
      */
     public static function new(): string
     {
+        self::checkPreconditions();
+
         $time = self::currentTimeInMilliseconds();
         $binStrTime = decbin($time);
+        if (strlen($binStrTime) > 40) {
+            throw new Uid64ExpiredException();
+        }
+
         $random = rand(0, 8388607);
         $binStrRandom = str_pad(decbin($random), 23, '0', STR_PAD_LEFT);
 
@@ -70,6 +64,7 @@ final class Uid64
      */
     public static function toText(string $uid64): string
     {
+        self::checkPreconditions();
         return base_convert($uid64, 2, 36);
     }
 
@@ -88,9 +83,21 @@ final class Uid64
      */
     public static function isUid64(string $test): bool
     {
+        self::checkPreconditions();
         return (
             preg_match('/^[0-9]/', $test) &&
             strlen(base_convert($test, 10, 2)) <= 63
         );
+    }
+
+    /**
+     * @todo add support for 32-bit systems with GMP plugin
+     * @throws Uid64NotSupportedException
+     */
+    private static function checkPreconditions(): void
+    {
+        if (PHP_INT_SIZE !== 8) {
+            throw new Uid64NotSupportedException();
+        }
     }
 }
