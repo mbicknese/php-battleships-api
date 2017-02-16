@@ -18,10 +18,10 @@ class Uid64Test extends TestCase
         $ids = [];
         for ($i = 0; $i < 1000; ++$i) {
             $id = Uid64::new();
-            $this->assertNotContains($id, $ids);
-            $ids[] = $id;
+            $ids[$id] = 0;
         }
 
+        $this->assertCount(1000, $ids);
         $this->assertInternalType('string', $id);
     }
 
