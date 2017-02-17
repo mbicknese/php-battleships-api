@@ -1,6 +1,10 @@
 <?php
 namespace App\Model\Ship;
 
+use App\Model\Match\MatchId;
+use App\Model\Vector2;
+use phpDocumentor\Reflection\Types\Callable_;
+
 /**
  * Class Ship
  *
@@ -10,22 +14,43 @@ namespace App\Model\Ship;
 class Ship
 {
     /**
-     * @var int
+     * @var MatchId
      */
-    protected $hitPoints;
-
+    private $matchId;
     /**
      * @var int
      */
-    protected $damage;
+    private $sequence;
+    /**
+     * @var iterable
+     */
+    private $coordinates;
+    /**
+     * @var int
+     */
+    private $player;
 
     /**
      * Ship constructor.
-     * @param int $hitPoints
+     * @param MatchId $matchId
+     * @param int $sequence
+     * @param iterable|Vector2[] $coordinates
+     * @param int $player (optional)
      */
-    public function __construct(int $hitPoints)
+    public function __construct(MatchId $matchId, int $sequence, iterable $coordinates, int $player = 0)
     {
-        $this->hitPoints = $hitPoints;
+        $this->matchId = $matchId;
+        $this->sequence = $sequence;
+        $this->coordinates = $coordinates;
+        $this->player = $player;
+    }
+
+    /**
+     * @return iterable|Vector2[]
+     */
+    public function coordinates(): iterable
+    {
+        return $this->coordinates;
     }
 
     /**
@@ -33,26 +58,23 @@ class Ship
      */
     public function hitPoints(): int
     {
-        return $this->hitPoints - $this->damage;
+        return count($this->coordinates);
     }
 
     /**
-     * @throws ShipAlreadySunkException
-     */
-    public function hit(): void
-    {
-        if ($this->hasSunk()) {
-            throw new ShipAlreadySunkException();
-        }
-
-        $this->damage++;
-    }
-
-    /**
+     * @param Ship $other
      * @return bool
      */
-    public function hasSunk(): bool
+    public function collidesWith(Ship $other): bool
     {
-        return $this->damage == $this->hitPoints;
+        foreach ($this->coordinates() as $own) {
+            foreach ($other->coordinates() as $theirs) {
+                if ($own->touches($theirs)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 }

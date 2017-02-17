@@ -1,6 +1,8 @@
 <?php
 namespace App\Model\Match;
 
+use App\Uid64\Uid64;
+
 /**
  * Class MatchId
  *
@@ -16,10 +18,11 @@ class MatchId
 
     /**
      * MatchId constructor.
+     * @param string $uid64
      */
-    public function __construct()
+    public function __construct(string $uid64 = null)
     {
-        $this->id = uniqid();
+        $this->id = $uid64 ?: Uid64::new();
     }
 
     /**

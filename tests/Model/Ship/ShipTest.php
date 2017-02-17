@@ -1,8 +1,9 @@
 <?php
 namespace App\Tests\Model\Ship;
 
+use App\Model\Match\MatchId;
 use App\Model\Ship\Ship;
-use App\Model\Ship\ShipAlreadySunkException;
+use App\Model\Vector2;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -13,21 +14,21 @@ use PHPUnit\Framework\TestCase;
  */
 class ShipTest extends TestCase
 {
-    public function testHitPoints()
+    public function testCollidesWith()
     {
-        $hitPoints = 2;
+        $ship1 = new Ship(new MatchId(), 1, [
+            new Vector2(1, 1),
+            new Vector2(1, 2),
+            new Vector2(1, 3),
+        ]);
+        $ship2 = new Ship(new MatchId(), 1, [
+            new Vector2(1, 1),
+            new Vector2(2, 1),
+            new Vector2(3, 1),
+        ]);
+        $this->assertTrue($ship1->collidesWith($ship2));
 
-        $ship = new Ship($hitPoints);
-        $this->assertEquals($hitPoints, $ship->hitPoints());
-
-        $ship->hit();
-        $this->assertEquals($hitPoints - 1, $ship->hitPoints());
-
-        $ship->hit();
-        $this->assertEquals(0, $ship->hitPoints());
-        $this->assertTrue($ship->hasSunk(), 'Expected ship with 2 hit points to have sunk after two hits.');
-
-        $this->expectException(ShipAlreadySunkException::class);
-        $ship->hit();
+        $ship3 = new Ship(new MatchId(), 1, [new Vector2(2, 4), new Vector2(2, 5)]);
+        $this->assertFalse($ship3->collidesWith($ship1));
     }
 }
