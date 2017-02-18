@@ -101,4 +101,18 @@ class Vector2
     {
         return abs($this->x() - $other->x()) + abs($this->y() - $other->y()) < 2;
     }
+
+    /**
+     * @param array $grid
+     * @return bool
+     */
+    public function isOffGrid(array $grid): bool
+    {
+        return (
+            $this->x() > $grid[0] ||
+            $this->x() < 0 ||
+            $this->y() > $grid[1] ||
+            $this->y() < 0
+        );
+    }
 }

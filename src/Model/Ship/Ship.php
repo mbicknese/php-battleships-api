@@ -3,7 +3,6 @@ namespace App\Model\Ship;
 
 use App\Model\Match\MatchId;
 use App\Model\Vector2;
-use phpDocumentor\Reflection\Types\Callable_;
 
 /**
  * Class Ship
@@ -51,14 +50,6 @@ class Ship
     public function coordinates(): iterable
     {
         return $this->coordinates;
-    }
-
-    /**
-     * @return int
-     */
-    public function hitPoints(): int
-    {
-        return count($this->coordinates);
     }
 
     /**
