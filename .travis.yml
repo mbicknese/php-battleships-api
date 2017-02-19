@@ -5,3 +5,10 @@ php:
 
 install:
   - composer install
+  - composer require codacy/coverage
+
+script:
+  - phpunit --coverage-clover ./reports/clover.xml
+
+after_script:
+  - vendor/bin/codacycoverage clover ./reports/clover.xml
