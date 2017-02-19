@@ -1,8 +1,7 @@
 language: php
+
 php:
   - '7.1'
-dist: trusty
-sudo: false
-before_script: composer install --no-interaction --no-progress
-script: bin/testsuite
 
+install:
+  - composer install
