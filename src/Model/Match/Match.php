@@ -2,6 +2,7 @@
 namespace App\Model\Match;
 
 use App\Model\Ship\Ship;
+use App\Model\Ship\ShipAlreadyPlacedException;
 use App\Model\Ship\ShipsCollideException;
 use App\Model\Vector2;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -37,17 +38,23 @@ class Match
      * @var int[]
      */
     protected $grid;
+    /**
+     * @var array|int[]
+     */
+    protected $shipSet;
 
     /**
      * Match constructor.
      * @param MatchId $id
      * @param array $grid (optional) Grid size, [int width, int height]
+     * @param array $shipSet
      */
-    public function __construct(MatchId $id, array $grid = null)
+    public function __construct(MatchId $id, array $grid = null, array $shipSet = null)
     {
         $this->id = $id;
         $this->ships = new ArrayCollection([new ArrayCollection(), new ArrayCollection()]);
         $this->grid = $grid ?: [15, 15];
+        $this->shipSet = $shipSet ?: [5, 4, 3, 3, 2];
     }
 
     /**
@@ -75,11 +82,11 @@ class Match
     }
 
     /**
-     * @return iterable
+     * @return array|int[]
      */
-    public function shipSet(): iterable
+    public function shipSet(): array
     {
-        // @TODO implement
+        return $this->shipSet;
     }
 
     /**
@@ -98,6 +105,10 @@ class Match
      */
     public function placeShip(int $player, int $x, int $y, int $length, int $direction): Ship
     {
+        if (! $this->isAnotherShipAllowed($player, $length)) {
+            throw new ShipAlreadyPlacedException();
+        }
+
         /** @var Vector2[] $coordinates */
         $coordinates = [new Vector2($x, $y)];
         for ($i = 1; $i < $length; ++$i) {
@@ -117,5 +128,24 @@ class Match
 
         $this->ships->get($player)->add($ship);
         return $ship;
+    }
+
+    /**
+     * Determines if a player can place another ship of given length
+     * @param int $player
+     * @param int $length
+     * @return bool
+     */
+    protected function isAnotherShipAllowed(int $player, int $length): bool
+    {
+        $amountAllowed = array_count_values($this->shipSet())[$length] ?? 0;
+        $amountPlaced = 0;
+        /** @var Ship $ship */
+        foreach ($this->ships->get($player) as $ship) {
+            if ($ship->hitPoints() == $length) {
+                $amountPlaced++;
+            }
+        }
+        return $amountPlaced < $amountAllowed;
     }
 }

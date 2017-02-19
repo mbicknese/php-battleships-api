@@ -4,6 +4,7 @@ namespace App\Tests\Model\Match;
 use App\Model\Match\EntityOffGridException;
 use App\Model\Match\Match;
 use App\Model\Match\MatchId;
+use App\Model\Ship\ShipAlreadyPlacedException;
 use App\Model\Ship\ShipsCollideException;
 use App\Model\Vector2;
 use PHPUnit\Framework\TestCase;
@@ -45,6 +46,15 @@ class MatchTest extends TestCase
 
         $this->assertFalse($player0Ship1->collidesWith($player0Ship2));
         $this->assertTrue($player0Ship1->collidesWith($player1Ship1));
+    }
+
+    public function testPlaceShipAlreadyPlaced()
+    {
+        $this->expectException(ShipAlreadyPlacedException::class);
+
+        $match = new Match(new MatchId());
+        $match->placeShip(1, 5, 5, 2, Vector2::DIRECTION_SOUTH);
+        $match->placeShip(1, 5, 5, 2, Vector2::DIRECTION_SOUTH);
     }
 
     public function testPlaceShipOffGrid()

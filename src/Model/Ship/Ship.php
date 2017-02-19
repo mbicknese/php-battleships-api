@@ -53,6 +53,14 @@ class Ship
     }
 
     /**
+     * @return int
+     */
+    public function hitPoints(): int
+    {
+        return count($this->coordinates);
+    }
+
+    /**
      * @param Ship $other
      * @return bool
      */
