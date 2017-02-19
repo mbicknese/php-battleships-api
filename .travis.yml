@@ -3,6 +3,9 @@ language: php
 php:
   - '7.1'
 
+notifications:
+  email: false
+
 install:
   - composer install
   - composer require codacy/coverage
