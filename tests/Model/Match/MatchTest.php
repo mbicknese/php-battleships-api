@@ -29,12 +29,20 @@ class MatchTest extends TestCase
     public function testPlaceShip()
     {
         $match = new Match(new MatchId());
-        $ship = $match->placeShip(0, 1, 1, 3, Vector2::DIRECTION_SOUTH);
+        $ship1 = $match->placeShip(0, 1, 1, 3, Vector2::DIRECTION_SOUTH);
+        $ship2 = $match->placeShip(0, 3, 1, 2, Vector2::DIRECTION_EAST);
         $this->assertArraySubset(
             [new Vector2(1, 1), new Vector2(1, 2), new Vector2(1, 3)],
-            $ship->coordinates()
+            $ship1->coordinates()
         );
-        $this->assertCount(3, $ship->coordinates());
+        $this->assertArraySubset(
+            [new Vector2(3, 1), new Vector2(4, 1)],
+            $ship2->coordinates()
+        );
+        $this->assertCount(3, $ship1->coordinates());
+        $this->assertCount(2, $ship2->coordinates());
+        $this->assertEquals(1, $ship1->sequence());
+        $this->assertEquals(2, $ship2->sequence());
     }
 
     public function testPlaceShipNoCollision()

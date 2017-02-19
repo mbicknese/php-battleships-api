@@ -61,6 +61,14 @@ class Ship
     }
 
     /**
+     * @return int
+     */
+    public function sequence(): int
+    {
+        return $this->sequence;
+    }
+
+    /**
      * @param Ship $other
      * @return bool
      */

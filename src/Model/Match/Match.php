@@ -119,7 +119,7 @@ class Match
             $coordinates[] = $coordinate;
         }
 
-        $ship = new Ship($this->id(), count($this->ships) + 1, $coordinates, $player);
+        $ship = new Ship($this->id(), count($this->ships->get($player)) + 1, $coordinates, $player);
         foreach ($this->ships->get($player) as $placedShip) {
             if ($ship->collidesWith($placedShip)) {
                 throw new ShipsCollideException();
