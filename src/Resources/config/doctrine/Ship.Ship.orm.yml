@@ -1,0 +1,18 @@
+App\Model\Ship\Ship:
+  type: entity
+  table: ship
+  repositoryClass: App\Repository\DoctrineShipRepository
+  id:
+    match:
+      associationKey: true
+    sequence:
+      type: smallint
+  fields:
+    coordinates:
+      type: array
+    player:
+      type: smallint
+  manyToOne:
+    match:
+      targetEntity: App\Model\Match\Match
+      inversedBy: ships

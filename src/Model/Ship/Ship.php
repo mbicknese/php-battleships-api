@@ -1,7 +1,7 @@
 <?php
 namespace App\Model\Ship;
 
-use App\Model\Match\MatchId;
+use App\Model\Match\Match;
 use App\Model\Vector2;
 
 /**
@@ -13,9 +13,9 @@ use App\Model\Vector2;
 class Ship
 {
     /**
-     * @var MatchId
+     * @var Match
      */
-    private $matchId;
+    protected $match;
     /**
      * @var int
      */
@@ -23,22 +23,22 @@ class Ship
     /**
      * @var iterable
      */
-    private $coordinates;
+    protected $coordinates;
     /**
      * @var int
      */
-    private $player;
+    protected $player;
 
     /**
      * Ship constructor.
-     * @param MatchId $matchId
+     * @param Match $match
      * @param int $sequence
      * @param iterable|Vector2[] $coordinates
      * @param int $player (optional)
      */
-    public function __construct(MatchId $matchId, int $sequence, iterable $coordinates, int $player = 0)
+    public function __construct(Match $match, int $sequence, iterable $coordinates, int $player = 0)
     {
-        $this->matchId = $matchId;
+        $this->match = $match;
         $this->sequence = $sequence;
         $this->coordinates = $coordinates;
         $this->player = $player;
@@ -83,5 +83,13 @@ class Ship
         }
 
         return false;
+    }
+
+    /**
+     * @return int
+     */
+    public function player(): int
+    {
+        return $this->player;
     }
 }

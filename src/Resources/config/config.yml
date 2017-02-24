@@ -28,6 +28,8 @@ doctrine:
         default_table_options:
           charset: utf8mb4
           collate: utf8mb4_unicode_ci
+    types:
+      match_id: App\Repository\Type\MatchIdType
   orm:
     auto_generate_proxy_classes: "%kernel.debug%"
     mappings:
@@ -35,4 +37,4 @@ doctrine:
         is_bundle: false
         type: yml
         dir: "%kernel.root_dir%/Resources/config/doctrine"
-        prefix: "App\\Entity"
+        prefix: "App\\Model"

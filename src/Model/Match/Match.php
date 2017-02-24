@@ -52,7 +52,7 @@ class Match
     public function __construct(MatchId $id, array $grid = null, array $shipSet = null)
     {
         $this->id = $id;
-        $this->ships = new ArrayCollection([new ArrayCollection(), new ArrayCollection()]);
+        $this->ships = new ArrayCollection();
         $this->grid = $grid ?: [15, 15];
         $this->shipSet = $shipSet ?: [5, 4, 3, 3, 2];
     }
@@ -119,14 +119,14 @@ class Match
             $coordinates[] = $coordinate;
         }
 
-        $ship = new Ship($this->id(), count($this->ships->get($player)) + 1, $coordinates, $player);
-        foreach ($this->ships->get($player) as $placedShip) {
+        $ship = new Ship($this, count($this->ships->get($player)) + 1, $coordinates, $player);
+        foreach ($this->ships($player) as $placedShip) {
             if ($ship->collidesWith($placedShip)) {
                 throw new ShipsCollideException();
             }
         }
 
-        $this->ships->get($player)->add($ship);
+        $this->addShip($ship);
         return $ship;
     }
 
@@ -141,11 +141,35 @@ class Match
         $amountAllowed = array_count_values($this->shipSet())[$length] ?? 0;
         $amountPlaced = 0;
         /** @var Ship $ship */
-        foreach ($this->ships->get($player) as $ship) {
+        foreach ($this->ships($player) as $ship) {
             if ($ship->hitPoints() == $length) {
                 $amountPlaced++;
             }
         }
         return $amountPlaced < $amountAllowed;
+    }
+
+    /**
+     * @param Ship $ship
+     */
+    protected function addShip(Ship $ship): void
+    {
+        $this->ships->add($ship);
+    }
+
+    /**
+     * Returns read only array of ships
+     *
+     * @param int $player
+     * @return array
+     */
+    public function ships(int $player = null): array
+    {
+        if ($player === null) {
+            return $this->ships->toArray();
+        }
+        return array_filter($this->ships->toArray(), function (Ship $ship) use ($player) {
+            return $ship->player() === $player;
+        });
     }
 }
