@@ -1,8 +1,8 @@
 <?php
 namespace App\Repository\Type;
 
+use App\Uid64\Doctrine\Uid64Type;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
-use Doctrine\DBAL\Types\BigIntType;
 use App\Model\Match\MatchId;
 
 /**
@@ -11,22 +11,15 @@ use App\Model\Match\MatchId;
  * @package App\Repository\Type
  * @author  Maarten Bicknese <maarten.bicknese@devmob.com>
  */
-class MatchIdType extends BigIntType
+class MatchIdType extends Uid64Type
 {
-    const MYTYPE = 'MatchIdType';
-
-    public function convertToDatabaseValue($value, AbstractPlatform $platform)
-    {
-        return (string) $value;
-    }
-
-    public function convertToPHPValue($value, AbstractPlatform $platform)
+    public function convertToPHPValue($value, AbstractPlatform $platform): MatchId
     {
         return new MatchId($value);
     }
 
-    public function getName()
+    public function getName(): string
     {
-        return self::MYTYPE;
+        return 'match_id';
     }
 }

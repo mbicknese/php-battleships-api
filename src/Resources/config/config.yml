@@ -28,6 +28,8 @@ doctrine:
         default_table_options:
           charset: utf8mb4
           collate: utf8mb4_unicode_ci
+        mapping_types:
+          match_id: match_id
     types:
       match_id: App\Repository\Type\MatchIdType
   orm:
