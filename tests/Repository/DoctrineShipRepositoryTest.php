@@ -4,6 +4,7 @@ namespace App\Tests\Repository;
 use App\Model\Match\Match;
 use App\Model\Match\MatchId;
 use App\Model\Ship\Ship;
+use App\Model\Ship\ShipCoordinate;
 use App\Model\Vector2;
 use App\Tests\BaseTestCase;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
@@ -50,7 +51,8 @@ class DoctrineShipRepositoryTest extends BaseTestCase
         $this->assertCount(3, $ships);
         $this->assertCount(3, $match->ships());
         $this->assertCount(3, $persistedMatch->ships());
-        $this->assertEquals($persistedMatch->ships()[0], $ship);
+        $this->assertEquals($ship, $persistedMatch->ships()[0]);
+        $this->assertEquals(new ShipCoordinate(1, 1, $ship), $persistedMatch->ships()[0]->coordinates()[0]);
     }
 
     public function testPersistShipParallel(): void
