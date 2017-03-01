@@ -1,0 +1,14 @@
+App\Model\Ship\ShipCoordinate:
+  type: entity
+  table: ship_coordinate
+  id:
+    x:
+      type: smallint
+    y:
+      type: smallint
+    ship:
+      associationKey: true
+  manyToOne:
+    ship:
+      targetEntity: App\Model\Ship\Ship
+      inversedBy: coordinates

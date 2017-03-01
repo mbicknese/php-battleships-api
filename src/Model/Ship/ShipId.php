@@ -1,15 +1,15 @@
 <?php
-namespace App\Model\Match;
+namespace App\Model\Ship;
 
 use App\Uid64\Uid64Id;
 
 /**
- * Class MatchId
+ * Class ShipId
  *
- * @package App\Model\Match
+ * @package App\Model\Ship
  * @author  Maarten Bicknese <maarten.bicknese@devmob.com>
  */
-class MatchId extends Uid64Id
+class ShipId extends Uid64Id
 {
 
 }

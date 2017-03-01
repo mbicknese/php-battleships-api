@@ -10,6 +10,8 @@ App\Model\Match\Match:
       type: array
     grid:
       type: array
+    phase:
+      type: smallint
   oneToMany:
     ships:
       targetEntity: App\Model\Ship\Ship

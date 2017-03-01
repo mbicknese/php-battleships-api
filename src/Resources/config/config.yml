@@ -30,8 +30,10 @@ doctrine:
           collate: utf8mb4_unicode_ci
         mapping_types:
           match_id: match_id
+          ship_id: ship_id
     types:
       match_id: App\Repository\Type\MatchIdType
+      ship_id: App\Repository\Type\ShipIdType
   orm:
     auto_generate_proxy_classes: "%kernel.debug%"
     mappings:

@@ -3,6 +3,7 @@ namespace App\Model\Match;
 
 use App\Model\Ship\Ship;
 use App\Model\Ship\ShipAlreadyPlacedException;
+use App\Model\Ship\ShipCoordinate;
 use App\Model\Ship\ShipsCollideException;
 use App\Model\Vector2;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -110,7 +111,7 @@ class Match
         }
 
         /** @var Vector2[] $coordinates */
-        $coordinates = [new Vector2($x, $y)];
+        $coordinates = [new ShipCoordinate($x, $y)];
         for ($i = 1; $i < $length; ++$i) {
             $coordinate = $coordinates[$i - 1]->move($direction);
             if ($coordinate->isOffGrid($this->grid())) {
