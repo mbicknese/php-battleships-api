@@ -1,8 +1,8 @@
 <?php
 namespace App\Model\Ship;
 
-use App\Model\Match\MatchId;
-use App\Model\Vector2;
+use App\Model\Match\Match;
+use Doctrine\Common\Collections\Collection;
 
 /**
  * Class Ship
@@ -13,39 +13,49 @@ use App\Model\Vector2;
 class Ship
 {
     /**
-     * @var MatchId
+     * @var ShipId
      */
-    private $matchId;
+    private $id;
+    /**
+     * @var Match
+     */
+    protected $match;
     /**
      * @var int
      */
     private $sequence;
     /**
-     * @var iterable
+     * @var iterable|Collection|ShipCoordinate[]
      */
-    private $coordinates;
+    protected $coordinates;
     /**
      * @var int
      */
-    private $player;
+    protected $player;
 
     /**
      * Ship constructor.
-     * @param MatchId $matchId
+     * @param Match $match
      * @param int $sequence
-     * @param iterable|Vector2[] $coordinates
+     * @param iterable|ShipCoordinate[]|Collection $coordinates
      * @param int $player (optional)
+     * @param ShipId $id
      */
-    public function __construct(MatchId $matchId, int $sequence, iterable $coordinates, int $player = 0)
+    public function __construct(Match $match, int $sequence, iterable $coordinates, int $player = 0, ShipId $id = null)
     {
-        $this->matchId = $matchId;
+        $this->id = $id ?: new ShipId();
+        $this->match = $match;
         $this->sequence = $sequence;
         $this->coordinates = $coordinates;
         $this->player = $player;
+
+        foreach ($this->coordinates() as $coordinate) {
+            $coordinate->attachToShip($this);
+        }
     }
 
     /**
-     * @return iterable|Vector2[]
+     * @return iterable|ShipCoordinate[]|Collection
      */
     public function coordinates(): iterable
     {
@@ -83,5 +93,13 @@ class Ship
         }
 
         return false;
+    }
+
+    /**
+     * @return int
+     */
+    public function player(): int
+    {
+        return $this->player;
     }
 }

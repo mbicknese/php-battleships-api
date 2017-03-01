@@ -5,6 +5,7 @@ use App\Model\Match\EntityOffGridException;
 use App\Model\Match\Match;
 use App\Model\Match\MatchId;
 use App\Model\Ship\ShipAlreadyPlacedException;
+use App\Model\Ship\ShipCoordinate;
 use App\Model\Ship\ShipsCollideException;
 use App\Model\Vector2;
 use PHPUnit\Framework\TestCase;
@@ -32,11 +33,11 @@ class MatchTest extends TestCase
         $ship1 = $match->placeShip(0, 1, 1, 3, Vector2::DIRECTION_SOUTH);
         $ship2 = $match->placeShip(0, 3, 1, 2, Vector2::DIRECTION_EAST);
         $this->assertArraySubset(
-            [new Vector2(1, 1), new Vector2(1, 2), new Vector2(1, 3)],
+            [new ShipCoordinate(1, 1, $ship1), new ShipCoordinate(1, 2, $ship1), new ShipCoordinate(1, 3, $ship1)],
             $ship1->coordinates()
         );
         $this->assertArraySubset(
-            [new Vector2(3, 1), new Vector2(4, 1)],
+            [new ShipCoordinate(3, 1, $ship2), new ShipCoordinate(4, 1, $ship2)],
             $ship2->coordinates()
         );
         $this->assertCount(3, $ship1->coordinates());

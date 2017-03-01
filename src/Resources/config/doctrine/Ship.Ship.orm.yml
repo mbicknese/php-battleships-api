@@ -1,0 +1,25 @@
+App\Model\Ship\Ship:
+  type: entity
+  table: ship
+  repositoryClass: App\Repository\DoctrineShipRepository
+  id:
+    id:
+      type: ship_id
+  fields:
+    sequence:
+      type: smallint
+    player:
+      type: smallint
+  manyToOne:
+    match:
+      targetEntity: App\Model\Match\Match
+      inversedBy: ships
+  oneToMany:
+    coordinates:
+      targetEntity: App\Model\Ship\ShipCoordinate
+      mappedBy: ship
+      cascade:
+        - persist
+  uniqueConstraints:
+    match_ships_idx:
+      columns: [ match_id, sequence ]

@@ -103,15 +103,15 @@ class Vector2
     }
 
     /**
-     * @param array $grid
+     * @param Grid $grid
      * @return bool
      */
-    public function isOffGrid(array $grid): bool
+    public function isOffGrid(Grid $grid): bool
     {
         return (
-            $this->x() > $grid[0] ||
+            $this->x() > $grid->width() ||
             $this->x() < 0 ||
-            $this->y() > $grid[1] ||
+            $this->y() > $grid->height() ||
             $this->y() < 0
         );
     }

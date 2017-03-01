@@ -1,0 +1,21 @@
+App\Model\Match\Match:
+  type: entity
+  table: '`match`'
+  repositoryClass: App\Repository\DoctrineMatchRepository
+  id:
+    id:
+      type: match_id
+  embedded:
+    grid:
+      class: App\Model\Grid
+  fields:
+    shipSet:
+      type: array
+    phase:
+      type: smallint
+  oneToMany:
+    ships:
+      targetEntity: App\Model\Ship\Ship
+      mappedBy: match
+      cascade:
+        - persist
