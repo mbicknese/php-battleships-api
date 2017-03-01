@@ -5,10 +5,11 @@ App\Model\Match\Match:
   id:
     id:
       type: match_id
+  embedded:
+    grid:
+      class: App\Model\Grid
   fields:
     shipSet:
-      type: array
-    grid:
       type: array
     phase:
       type: smallint

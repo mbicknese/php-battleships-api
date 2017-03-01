@@ -1,6 +1,7 @@
 <?php
 namespace App\Tests\Model;
 
+use App\Model\Grid;
 use App\Model\Vector2;
 use PHPUnit\Framework\TestCase;
 
@@ -28,15 +29,15 @@ class Vector2Test extends TestCase
 
     public function testIsOffGrid()
     {
-        $this->assertFalse((new Vector2(0, 0))->isOffGrid([5, 5]), '[0, 0] is determined as off the grid');
-        $this->assertFalse((new Vector2(5, 5))->isOffGrid([5, 5]), '[5, 5] is determined as off a [5, 5] grid');
+        $this->assertFalse((new Vector2(0, 0))->isOffGrid(new Grid(5, 5)), '[0, 0] is determined as off the grid');
+        $this->assertFalse((new Vector2(5, 5))->isOffGrid(new Grid(5, 5)), '[5, 5] is determined as off a [5, 5] grid');
 
-        $this->assertTrue((new Vector2(-1, 0))->isOffGrid([5, 5]), '[-1, 0] is determined as on a [5, 5] grid');
-        $this->assertTrue((new Vector2(0, -1))->isOffGrid([5, 5]), '[0, -1] is determined as off a [5, 5] grid');
-        $this->assertTrue((new Vector2(-1, -1))->isOffGrid([5, 5]), '[-1, -1] is determined as off a [5, 5] grid');
-        $this->assertTrue((new Vector2(6, 5))->isOffGrid([5, 5]), '[6, 5] is determined as off a [5, 5] grid');
-        $this->assertTrue((new Vector2(5, 6))->isOffGrid([5, 5]), '[5, 6] is determined as off a [5, 5] grid');
-        $this->assertTrue((new Vector2(6, 6))->isOffGrid([5, 5]), '[6, 6] is determined as off a [5, 5] grid');
+        $this->assertTrue((new Vector2(-1, 0))->isOffGrid(new Grid(5, 5)), '[-1, 0] is determined as on grid');
+        $this->assertTrue((new Vector2(0, -1))->isOffGrid(new Grid(5, 5)), '[0, -1] is determined as on grid');
+        $this->assertTrue((new Vector2(-1, -1))->isOffGrid(new Grid(5, 5)), '[-1, -1] is determined as on grid');
+        $this->assertTrue((new Vector2(6, 5))->isOffGrid(new Grid(5, 5)), '[6, 5] is determined as on a [5, 5] grid');
+        $this->assertTrue((new Vector2(5, 6))->isOffGrid(new Grid(5, 5)), '[5, 6] is determined as on a [5, 5] grid');
+        $this->assertTrue((new Vector2(6, 6))->isOffGrid(new Grid(5, 5)), '[6, 6] is determined as on a [5, 5] grid');
     }
 
     public function testEquals()

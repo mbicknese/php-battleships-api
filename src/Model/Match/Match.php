@@ -1,6 +1,7 @@
 <?php
 namespace App\Model\Match;
 
+use App\Model\Grid;
 use App\Model\Ship\Ship;
 use App\Model\Ship\ShipAlreadyPlacedException;
 use App\Model\Ship\ShipCoordinate;
@@ -36,7 +37,7 @@ class Match
     protected $ships;
 
     /**
-     * @var int[]
+     * @var Grid
      */
     protected $grid;
     /**
@@ -47,14 +48,14 @@ class Match
     /**
      * Match constructor.
      * @param MatchId $id
-     * @param array $grid (optional) Grid size, [int width, int height]
-     * @param array $shipSet
+     * @param Grid $grid (optional)
+     * @param array $shipSet (optional)
      */
-    public function __construct(MatchId $id, array $grid = null, array $shipSet = null)
+    public function __construct(MatchId $id, Grid $grid = null, array $shipSet = null)
     {
         $this->id = $id;
         $this->ships = new ArrayCollection();
-        $this->grid = $grid ?: [15, 15];
+        $this->grid = $grid ?: new Grid(15, 15);
         $this->shipSet = $shipSet ?: [5, 4, 3, 3, 2];
     }
 
@@ -75,9 +76,9 @@ class Match
     }
 
     /**
-     * @return array|int[]
+     * @return Grid
      */
-    public function grid(): array
+    public function grid(): Grid
     {
         return $this->grid;
     }

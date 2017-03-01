@@ -1,0 +1,5 @@
+App\Model\Grid:
+  type: embeddable
+  fields:
+    width: { type: integer }
+    height: { type: integer }
