@@ -8,6 +8,7 @@ use App\Model\Ship\ShipCoordinate;
 use App\Model\Ship\ShipsCollideException;
 use App\Model\Vector2;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 /**
  * Class Match
@@ -44,19 +45,31 @@ class Match
      * @var array|int[]
      */
     protected $shipSet;
+    /**
+     * @var int
+     */
+    protected $slots;
+    /**
+     * @var Collection|Player[]
+     */
+    protected $players;
 
     /**
      * Match constructor.
      * @param MatchId $id
      * @param Grid $grid (optional)
      * @param array $shipSet (optional)
+     * @param int $slots (optional)
      */
-    public function __construct(MatchId $id, Grid $grid = null, array $shipSet = null)
+    public function __construct(MatchId $id, Grid $grid = null, array $shipSet = null, int $slots = 2)
     {
         $this->id = $id;
         $this->ships = new ArrayCollection();
+        $this->players = new ArrayCollection();
+
         $this->grid = $grid ?: new Grid(15, 15);
         $this->shipSet = $shipSet ?: [5, 4, 3, 3, 2];
+        $this->slots = $slots;
     }
 
     /**
@@ -173,5 +186,27 @@ class Match
         return array_filter($this->ships->toArray(), function (Ship $ship) use ($player) {
             return $ship->player() === $player;
         });
+    }
+
+    /**
+     * @return Player
+     */
+    public function join(): Player
+    {
+        if (count($this->players) >= $this->slots) {
+            throw new NoSlotsAvailableException();
+        }
+
+        $player = new Player($this, count($this->players) + 1);
+        $this->players->add($player);
+        return $player;
+    }
+
+    /**
+     * @return Player[]|Collection
+     */
+    public function players(): Collection
+    {
+        return $this->players;
     }
 }

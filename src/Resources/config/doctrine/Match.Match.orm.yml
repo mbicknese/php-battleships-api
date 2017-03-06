@@ -9,13 +9,17 @@ App\Model\Match\Match:
     grid:
       class: App\Model\Grid
   fields:
-    shipSet:
-      type: array
-    phase:
-      type: smallint
+    shipSet: { type: array }
+    phase: { type: smallint }
+    slots: { type: smallint }
   oneToMany:
     ships:
       targetEntity: App\Model\Ship\Ship
       mappedBy: match
       cascade:
         - persist
+    players:
+      targetEntity: App\Model\Match\Player
+      mappedBy: match
+      cascade:
+       - persist

@@ -1,0 +1,10 @@
+App\Model\Match\Player:
+  type: entity
+  table: player
+  id:
+    match: { associationKey: true }
+    sequence: { type: integer }
+  manyToOne:
+    match:
+      targetEntity: App\Model\Match\Match
+      inversedBy: players

@@ -1,1 +1,13 @@
 services:
+  app.lobby:
+    class: App\Gameplay\Lobby
+    arguments: ["@app.repository.match"]
+
+  app.controller.match:
+    class: App\Controller\MatchController
+    arguments: ["@app.lobby"]
+
+  app.repository.match:
+    class: App\Repository\DoctrineMatchRepository
+    factory: ["@doctrine.orm.entity_manager", getRepository]
+    arguments: ["App\\Model\\Match\\Match"]

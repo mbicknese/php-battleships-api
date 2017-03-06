@@ -23,9 +23,9 @@ A game is followed in the following sequence:
 
 ## Playing the game
 
-### Join a match [GET /match]
-To play in a game, one first has to join a match. You can be either the first (0) or the
-second (1) participant. The header contains the JWT to use on further POST requests. The
+### Join a match [POST /match]
+To play in a game, one first has to join a match. You can be either the first (1) or the
+second (2) participant. The header contains the JWT to use on further POST requests. The
 response contains:
 + **player** *(number)* - whether you're the first or second player, useful to determine whether it is your turn.
 + **id** *(string)* - id of the match
@@ -35,7 +35,7 @@ response contains:
     + Body
     
             {
-                "player": 1,
+                "player": 2,
                 "id": "-KcSKrUV5pqaYwUcwVZP"
             }
         
@@ -67,7 +67,7 @@ sync the match state. A match consists of:
     
             {
                 "phase": 1,
-                "current_player": 0,
+                "current_player": 1,
                 "ships": [5, 4, 3, 3, 2],
                 "grid": [15, 15],
                 "shots": [

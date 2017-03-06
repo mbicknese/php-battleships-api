@@ -1,8 +1,8 @@
 <?php
 namespace App\Tests\Controller;
 
-use App\Controller\MatchController;
-use PHPUnit\Framework\TestCase;
+use App\Tests\BaseTestCase;
+use Doctrine\ORM\EntityManager;
 
 /**
  * Class MatchControllerTest
@@ -10,17 +10,42 @@ use PHPUnit\Framework\TestCase;
  * @package App\Tests\Controller
  * @author  Maarten Bicknese <maarten.bicknese@devmob.com>
  */
-class MatchControllerTest extends TestCase
+class MatchControllerTest extends BaseTestCase
 {
+    /**
+     * @var EntityManager
+     */
+    private $em;
+
+    public function setUp()
+    {
+        self::createClient();
+        self::createSchema();
+        $this->em = self::$kernel->getContainer()->get('doctrine')->getManager();
+    }
+
     public function testJoinMatch()
     {
-        $matchController = new MatchController();
-        $response = $matchController->joinMatch();
+        $matchController = self::$kernel->getContainer()->get('app.controller.match');
 
+        $response = $matchController->joinMatch();
         $content = json_decode($response->getContent(), true);
 
-        $this->assertArrayHasKey('player', $content);
+        $this->assertEquals(1, $content['player']);
         $this->assertArrayHasKey('id', $content);
         $this->assertArrayHasKey('authentication', $response->headers->all());
+        $this->assertArrayHasKey('location', $response->headers->all());
+
+        $response = $matchController->joinMatch();
+        $content = json_decode($response->getContent(), true);
+
+        $this->assertEquals(2, $content['player']);
+
+        $response = $matchController->joinMatch();
+        $content = json_decode($response->getContent(), true);
+
+        $this->assertEquals(1, $content['player']);
+
+
     }
 }
