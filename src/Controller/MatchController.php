@@ -2,8 +2,7 @@
 namespace App\Controller;
 
 use App\Gameplay\Lobby;
-use App\Model\Match\Match;
-use App\Model\Match\MatchId;
+use App\Uid64\Uid64;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -31,7 +30,6 @@ class MatchController
 
     /**
      * @return Response
-     * @todo generate location path from routing
      */
     public function joinMatch(): Response
     {
@@ -43,7 +41,7 @@ class MatchController
         ];
         $headers = [
             'Authentication' => 'Not yet implemented',
-            'Location'       => sprintf('/match/%s', $match->id()),
+            'Location'       => sprintf('/match/%s', Uid64::toText($match->id())),
         ];
 
         return new JsonResponse($data, 201, $headers);
