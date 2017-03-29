@@ -1,8 +1,10 @@
 <?php
 namespace App\Tests\Controller;
 
+use App\Controller\MatchController;
 use App\Tests\BaseTestCase;
 use Doctrine\ORM\EntityManager;
+use Firebase\JWT\JWT;
 
 /**
  * Class MatchControllerTest
@@ -26,15 +28,22 @@ class MatchControllerTest extends BaseTestCase
 
     public function testJoinMatch()
     {
+        /** @var MatchController $matchController */
         $matchController = self::$kernel->getContainer()->get('app.controller.match');
 
         $response = $matchController->joinMatch();
         $content = json_decode($response->getContent(), true);
+        $jwtContent = JWT::decode(
+            $response->headers->get('authentication'),
+            self::$kernel->getContainer()->getParameter('env(APP_SECRET)'),
+            ['HS256']
+        );
 
-        $this->assertEquals(1, $content['player']);
         $this->assertArrayHasKey('id', $content);
-        $this->assertArrayHasKey('authentication', $response->headers->all());
         $this->assertArrayHasKey('location', $response->headers->all());
+        $this->assertEquals(1, $content['player']);
+        $this->assertEquals($content['player'], $jwtContent->player);
+        $this->assertInternalType('string', $jwtContent->id);
 
         $response = $matchController->joinMatch();
         $content = json_decode($response->getContent(), true);
@@ -45,7 +54,5 @@ class MatchControllerTest extends BaseTestCase
         $content = json_decode($response->getContent(), true);
 
         $this->assertEquals(1, $content['player']);
-
-
     }
 }
