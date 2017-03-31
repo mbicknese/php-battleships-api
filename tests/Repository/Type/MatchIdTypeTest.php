@@ -2,9 +2,9 @@
 namespace App\Tests\Repository\Type;
 
 use App\Model\Match\MatchId;
+use App\Tests\BaseTestCase;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\Type;
-use PHPUnit\Framework\TestCase;
 
 /**
  * Class MatchIdTypeTest
@@ -12,7 +12,7 @@ use PHPUnit\Framework\TestCase;
  * @package App\Tests\Repository\Type
  * @author  Maarten Bicknese <maarten.bicknese@devmob.com>
  */
-class MatchIdTypeTest extends TestCase
+class MatchIdTypeTest extends BaseTestCase
 {
     public function testConvertToPHPValue()
     {
