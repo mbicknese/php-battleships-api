@@ -4,6 +4,7 @@ namespace App\Tests\Model\Match;
 use App\Model\Match\EntityOffGridException;
 use App\Model\Match\Match;
 use App\Model\Match\MatchId;
+use App\Model\Match\NoSlotsAvailableException;
 use App\Model\Ship\ShipAlreadyPlacedException;
 use App\Model\Ship\ShipCoordinate;
 use App\Model\Ship\ShipsCollideException;
@@ -81,5 +82,15 @@ class MatchTest extends TestCase
         $match = new Match(new MatchId());
         $match->placeShip(0, 1, 1, 3, Vector2::DIRECTION_SOUTH);
         $match->placeShip(0, 1, 1, 3, Vector2::DIRECTION_SOUTH);
+    }
+
+    public function testJoinTooMany()
+    {
+        $match = new Match(new MatchId());
+        $match->join();
+        $match->join();
+
+        $this->expectException(NoSlotsAvailableException::class);
+        $match->join();
     }
 }

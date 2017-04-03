@@ -7,6 +7,7 @@ use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Kernel;
+use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollectionBuilder;
 
 /**
@@ -63,7 +64,14 @@ class AppKernel extends Kernel
      */
     protected function configureRoutes(RouteCollectionBuilder $routes): void
     {
-        // load the annotation routes
-        $routes->add('/', 'controller.item:index', 'home');
+        $routes->addRoute(new Route(
+            '/match',
+            ['_controller' => 'app.controller.match:joinMatch'],
+            [],
+            [],
+            '',
+            [],
+            ['POST']
+        ), 'join');
     }
 }

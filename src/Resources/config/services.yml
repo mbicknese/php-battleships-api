@@ -1,1 +1,16 @@
 services:
+  app.lobby:
+    class: App\Gameplay\Lobby
+    arguments: ["@app.repository.match"]
+  app.jwt:
+    class: App\Security\Jwt
+    arguments: ["%env(APP_SECRET)%"]
+
+  app.controller.match:
+    class: App\Controller\MatchController
+    arguments: ["@app.lobby", "@app.jwt"]
+
+  app.repository.match:
+    class: App\Repository\DoctrineMatchRepository
+    factory: ["@doctrine.orm.entity_manager", getRepository]
+    arguments: ["App\\Model\\Match\\Match"]
