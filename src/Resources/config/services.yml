@@ -11,7 +11,7 @@ services:
 
   app.controller.match:
     class: App\Controller\MatchController
-    arguments: ["@app.lobby", "@app.jwt"]
+    arguments: ["@app.lobby", "@app.jwt", "@app.findMatch"]
 
   app.repository.match:
     class: App\Repository\DoctrineMatchRepository

@@ -3,7 +3,6 @@ namespace App\Tests\Controller;
 
 use App\Controller\MatchController;
 use App\Tests\BaseTestCase;
-use Doctrine\ORM\EntityManager;
 use Firebase\JWT\JWT;
 
 /**
@@ -15,23 +14,29 @@ use Firebase\JWT\JWT;
 class MatchControllerTest extends BaseTestCase
 {
     /**
-     * @var EntityManager
+     * @var MatchController
      */
-    private $em;
+    protected static $matchController;
 
-    public function setUp()
+    public static function setUpBeforeClass()
     {
         self::createClient();
         self::createSchema();
-        $this->em = self::$kernel->getContainer()->get('doctrine')->getManager();
+        self::$matchController = self::$kernel->getContainer()->get('app.controller.match');
+    }
+    public function tearDown()
+    {
+        // Prevent default tearDown
+    }
+    public static function tearDownAfterClass()
+    {
+        self::ensureKernelShutdown();
+        parent::tearDownAfterClass();
     }
 
     public function testJoinMatch()
     {
-        /** @var MatchController $matchController */
-        $matchController = self::$kernel->getContainer()->get('app.controller.match');
-
-        $response = $matchController->joinMatch();
+        $response = self::$matchController->joinMatch();
         $content = json_decode($response->getContent(), true);
         $jwtContent = JWT::decode(
             $response->headers->get('authentication'),
@@ -45,14 +50,28 @@ class MatchControllerTest extends BaseTestCase
         $this->assertEquals($content['player'], $jwtContent->player);
         $this->assertInternalType('string', $jwtContent->id);
 
-        $response = $matchController->joinMatch();
+        $response = self::$matchController->joinMatch();
         $content = json_decode($response->getContent(), true);
 
         $this->assertEquals(2, $content['player']);
 
-        $response = $matchController->joinMatch();
+        $response = self::$matchController->joinMatch();
         $content = json_decode($response->getContent(), true);
 
         $this->assertEquals(1, $content['player']);
+    }
+
+    public function testDisplayMatch()
+    {
+        $joinMatchResponse = self::$matchController->joinMatch();
+        $joinMatchContent = json_decode($joinMatchResponse->getContent(), true);
+        $displayMatchResponse = self::$matchController->displayMatch($joinMatchContent['id']);
+        $displayMatchContent = json_decode($displayMatchResponse->getContent(), true);
+
+        $this->assertInternalType('int', $displayMatchContent['phase']);
+        $this->assertInternalType('int', $displayMatchContent['current_player']);
+        $this->assertInternalType('array', $displayMatchContent['ships']);
+        $this->assertCount(2, $displayMatchContent['grid']);
+        $this->assertInternalType('array', $displayMatchContent['shots']);
     }
 }
