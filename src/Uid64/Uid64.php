@@ -73,6 +73,22 @@ final class Uid64
     }
 
     /**
+     * Transforms a 36 character set based string back to an integer
+     *
+     * @param string $textUid64
+     * @return string String representation of a big int
+     */
+    public static function fromText(string $textUid64): string
+    {
+        self::checkPreconditions();
+        if (! preg_match('/^[a-z0-9]+$/', $textUid64)) {
+            throw InvalidUid64TextException::fromInvalidText($textUid64);
+        }
+
+        return base_convert($textUid64, 36, 10);
+    }
+
+    /**
      * @return int
      */
     protected static function currentTimeInMilliseconds(): int

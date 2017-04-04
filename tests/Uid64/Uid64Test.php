@@ -2,6 +2,7 @@
 namespace App\Tests\Uid64;
 
 use App\Uid64\InvalidUid64Exception;
+use App\Uid64\InvalidUid64TextException;
 use App\Uid64\Uid64;
 use PHPUnit\Framework\TestCase;
 
@@ -42,5 +43,15 @@ class Uid64Test extends TestCase
 
         $this->expectException(InvalidUid64Exception::class);
         Uid64::toText('-1');
+    }
+
+    public function testFromText()
+    {
+        $this->assertEquals('0', Uid64::fromText('0'));
+        $this->assertEquals('9223372036854775807', Uid64::fromText('1y2p0ij32e8e7'));
+        $this->assertEquals('28125832510328208', Uid64::fromText('7oxrx2x69ao'));
+
+        $this->expectException(InvalidUid64TextException::class);
+        Uid64::fromText('!');
     }
 }
