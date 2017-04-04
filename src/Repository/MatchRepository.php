@@ -2,6 +2,7 @@
 namespace App\Repository;
 
 use App\Model\Match\Match;
+use App\Model\Match\MatchId;
 
 /**
  * Interface MatchRepository
@@ -13,6 +14,12 @@ interface MatchRepository
      * @return Match|null
      */
     public function findOneOpen(): ?Match;
+
+    /**
+     * @param MatchId $matchId
+     * @return Match|null
+     */
+    public function findOneById(MatchId $matchId): ?Match;
 
     /**
      * @param Match $match

@@ -5,6 +5,9 @@ services:
   app.jwt:
     class: App\Security\Jwt
     arguments: ["%env(APP_SECRET)%"]
+  app.findMatch:
+    class: App\Service\FindMatchService
+    arguments: ["@app.repository.match"]
 
   app.controller.match:
     class: App\Controller\MatchController
