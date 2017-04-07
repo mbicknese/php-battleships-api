@@ -73,5 +73,14 @@ class AppKernel extends Kernel
             [],
             ['POST']
         ), 'join');
+        $routes->addRoute(new Route(
+            '/match/{matchId}',
+            ['_controller' => 'app.controller.match:displayMatch'],
+            [],
+            [],
+            '',
+            [],
+            ['GET']
+        ), 'display');
     }
 }
