@@ -12,8 +12,18 @@ services:
   app.controller.match:
     class: App\Controller\MatchController
     arguments: ["@app.lobby", "@app.jwt", "@app.findMatch"]
+  app.controller.ship:
+    class: App\Controller\ShipController
+    arguments: ["@app.findMatch"]
 
   app.repository.match:
     class: App\Repository\DoctrineMatchRepository
     factory: ["@doctrine.orm.entity_manager", getRepository]
     arguments: ["App\\Model\\Match\\Match"]
+
+  app.jwt_authenticator:
+    class: App\Security\JwtAuthenticator
+    arguments: ["@app.jwt"]
+  app.match_provider:
+    class: App\Security\MatchProvider
+    arguments: ["@app.findMatch"]
