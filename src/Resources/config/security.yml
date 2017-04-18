@@ -8,4 +8,4 @@ security:
       guard:
         authenticators: ["app.jwt_authenticator"]
   access_control:
-    - { path: ^/ship, roles: ROLE_MATCH_OPEN }
+    - { path: ^/ship, roles: ROLE_PLAYER}

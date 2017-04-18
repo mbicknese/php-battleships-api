@@ -5,7 +5,6 @@ use Exception;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Security\Core\Exception\AuthenticationCredentialsNotFoundException;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
@@ -113,7 +112,10 @@ class JwtAuthenticator extends AbstractGuardAuthenticator
     {
         try {
             $authInfo = $this->jwt->decode($credentials);
-            return $userProvider->loadUserByUsername($authInfo->id);
+            /** @var MatchPlayer $matchPlayer */
+            $matchPlayer = $userProvider->loadUserByUsername($authInfo->id);
+            $matchPlayer->setSequence($authInfo->player);
+            return $matchPlayer;
         } catch (Exception $exception) {
             throw new AuthenticationException();
         }
@@ -160,13 +162,7 @@ class JwtAuthenticator extends AbstractGuardAuthenticator
     }
 
     /**
-     * Called when authentication executed and was successful!
-     *
-     * This should return the Response sent back to the user, like a
-     * RedirectResponse to the last page they visited.
-     *
-     * If you return null, the current request will continue, and the user
-     * will be authenticated. This makes sense, for example, with an API.
+     * Will always return null as all authenticated requests need to be handled by their controllers
      *
      * @param Request $request
      * @param TokenInterface $token

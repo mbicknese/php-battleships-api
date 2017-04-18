@@ -1,9 +1,14 @@
 <?php
 namespace App\Tests\Security;
 
+use App\Model\Match\Match;
+use App\Model\Match\MatchId;
 use App\Security\Jwt;
 use App\Security\JwtAuthenticator;
+use App\Security\MatchPlayer;
+use App\Security\MatchPlayerProvider;
 use App\Tests\BaseTestCase;
+use PHPUnit_Framework_MockObject_MockObject;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -38,5 +43,26 @@ class JwtAuthenticatorTest extends BaseTestCase
         $client = $this->createClient();
         $client->request('POST', '/ship', [], [], ['HTTP_Authorization' => 'bearer abc.abc.abc']);
         $this->assertEquals(403, $client->getResponse()->getStatusCode());
+    }
+
+    public function testGetUser()
+    {
+        $jwt = new Jwt('test');
+        $jwtAuthenticator = new JwtAuthenticator($jwt);
+        $matchPlayer = new MatchPlayer(new Match(new MatchId()));
+        /** @var PHPUnit_Framework_MockObject_MockObject|MatchPlayerProvider $matchPlayerProvider */
+        $matchPlayerProvider = $this
+            ->getMockBuilder(MatchPlayerProvider::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $matchPlayerProvider->method('loadUserByUsername')->willReturn($matchPlayer);
+
+
+        $returnedMatchPlayer = $jwtAuthenticator->getUser(
+            $jwt->encode(['id' => $matchPlayer->getUsername(), 'player' => 1]),
+            $matchPlayerProvider
+        );
+        $this->assertEquals(1, $returnedMatchPlayer->getSequence());
+        $this->assertEquals($matchPlayer->getUsername(), $returnedMatchPlayer->getUsername());
     }
 }

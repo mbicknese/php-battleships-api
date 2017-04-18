@@ -11,12 +11,12 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 /**
- * Class MatchProvider
+ * Class MatchPlayerProvider
  *
  * @package App\Security
  * @author  Maarten Bicknese <maarten.bicknese@devmob.com>
  */
-class MatchProvider implements UserProviderInterface
+class MatchPlayerProvider implements UserProviderInterface
 {
     /**
      * @var FindMatchService
@@ -35,11 +35,11 @@ class MatchProvider implements UserProviderInterface
     /**
      * @param string $matchId Text representation of the match id
      *
-     * @return Match
+     * @return MatchPlayer
      *
      * @throws UsernameNotFoundException if the user is not found
      */
-    public function loadUserByUsername($matchId): Match
+    public function loadUserByUsername($matchId): MatchPlayer
     {
         try {
             $match = $this->findMatchService->execute(new MatchId(Uid64::fromText($matchId)));
@@ -47,7 +47,7 @@ class MatchProvider implements UserProviderInterface
             throw new UsernameNotFoundException();
         }
 
-        return new Match($match);
+        return new MatchPlayer($match, 1);
     }
 
     /**

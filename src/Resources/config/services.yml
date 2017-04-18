@@ -25,5 +25,5 @@ services:
     class: App\Security\JwtAuthenticator
     arguments: ["@app.jwt"]
   app.match_provider:
-    class: App\Security\MatchProvider
+    class: App\Security\MatchPlayerProvider
     arguments: ["@app.findMatch"]

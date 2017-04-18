@@ -5,25 +5,31 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use App\Model\Match\Match as MatchModel;
 
 /**
- * Class Match
+ * Class MatchPlayer
  *
  * @package App\Security
  * @author  Maarten Bicknese <maarten.bicknese@devmob.com>
  */
-class Match implements UserInterface
+class MatchPlayer implements UserInterface
 {
     /**
      * @var MatchModel
      */
     private $match;
+    /**
+     * @var int
+     */
+    private $sequence;
 
     /**
      * Match constructor.
      * @param MatchModel $match
+     * @param int        $sequence (optional)
      */
-    public function __construct(MatchModel $match)
+    public function __construct(MatchModel $match, int $sequence = null)
     {
         $this->match = $match;
+        $this->sequence = $sequence;
     }
 
     /**
@@ -44,7 +50,7 @@ class Match implements UserInterface
      */
     public function getRoles(): array
     {
-        return ['ROLE_MATCH_OPEN'];
+        return ['ROLE_PLAYER'];
     }
 
     /**
@@ -90,5 +96,21 @@ class Match implements UserInterface
      */
     public function eraseCredentials()
     {
+    }
+
+    /**
+     * @return int
+     */
+    public function getSequence(): int
+    {
+        return $this->sequence;
+    }
+
+    /**
+     * @param int $sequence
+     */
+    public function setSequence(int $sequence)
+    {
+        $this->sequence = $sequence;
     }
 }
