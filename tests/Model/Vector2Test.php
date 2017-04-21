@@ -1,9 +1,9 @@
 <?php
 namespace App\Tests\Model;
 
+use App\Model\CannotDetermineException;
 use App\Model\Grid;
 use App\Model\Vector2;
-use PharIo\Version\VersionConstraintParser;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -14,6 +14,16 @@ use PHPUnit\Framework\TestCase;
  */
 class Vector2Test extends TestCase
 {
+    public function testMove()
+    {
+        $this->assertEquals(new Vector2(0, -1), (new Vector2(0, 0))->move(Vector2::DIRECTION_NORTH));
+        $this->assertEquals(new Vector2(1, 0), (new Vector2(0, 0))->move(Vector2::DIRECTION_EAST));
+        $this->assertEquals(new Vector2(0, 1), (new Vector2(0, 0))->move(Vector2::DIRECTION_SOUTH));
+        $this->assertEquals(new Vector2(-1, 0), (new Vector2(0, 0))->move(Vector2::DIRECTION_WEST));
+        $this->assertEquals(new Vector2(-5, 0), (new Vector2(0, 0))->move(Vector2::DIRECTION_WEST, 5));
+        $this->assertEquals(new Vector2(5, 0), (new Vector2(0, 0))->move(Vector2::DIRECTION_EAST, 5));
+    }
+
     public function testTouch()
     {
         $base = new Vector2(0, 0);
@@ -67,6 +77,16 @@ class Vector2Test extends TestCase
 
     public function testSingleAxisDirection()
     {
+        $this->assertEquals(Vector2::DIRECTION_NORTH, (new Vector2(0, -3))->singleAxisDirection());
+        $this->assertEquals(Vector2::DIRECTION_EAST, (new Vector2(5, 0))->singleAxisDirection());
+        $this->assertEquals(Vector2::DIRECTION_SOUTH, (new Vector2(0, 2))->singleAxisDirection());
+        $this->assertEquals(Vector2::DIRECTION_WEST, (new Vector2(-10, 0))->singleAxisDirection());
+    }
+
+    public function testSingleAxisDirectionCannotDetermineException()
+    {
+        $this->expectException(CannotDetermineException::class);
+        (new Vector2(1, -1))->singleAxisDirection();
     }
 
     public function testNormalize()

@@ -4,7 +4,13 @@ namespace App\Model;
 /**
  * Class Vector2
  *
- * Used to communicate coordinates on the grid
+ * Used to communicate and calculate coordinates on the grid.
+ * Keep in mind that the vectors are calculated with an origin in the top
+ * left corner. Descriptive names are based on this premise. i.e. To move
+ * upwards one needs to decrease the Y value, moving to the right still
+ * requires to increase the X value.
+ *
+ * @fixme The grid class can be dropped in favor of using a vector2 to describe the grid.
  *
  * @package App\Model
  * @author  Maarten Bicknese <maarten.bicknese@devmob.com>
@@ -16,10 +22,13 @@ class Vector2
     const DIRECTION_SOUTH = 2;
     const DIRECTION_WEST = 3;
 
+    /**
+     * Rotated by -90 degrees because of the X Y notation.
+     */
     const COMPASS = [
-        -1 => [-1 => -1, 0 => self::DIRECTION_EAST, 1 => -1],
+        -1 => [-1 => -1, 0 => self::DIRECTION_WEST, 1 => -1],
         0  => [-1 => self::DIRECTION_NORTH, 0 => -1, 1 => self::DIRECTION_SOUTH],
-        1  => [-1 => -1, 0 => self::DIRECTION_WEST, 1 => -1],
+        1  => [-1 => -1, 0 => self::DIRECTION_EAST, 1 => -1],
     ];
 
     /**
@@ -59,8 +68,11 @@ class Vector2
     }
 
     /**
+     * Creates a new vector with a moved target
+     *
      * @param int $direction
      * @param int $magnitude (optional)
+     *
      * @return Vector2
      */
     public function move(int $direction, int $magnitude = 1): Vector2
@@ -127,6 +139,7 @@ class Vector2
      *
      * @param Vector2 $origin
      * @param Vector2 $target
+     *
      * @return Vector2
      */
     public static function diff(Vector2 $origin, Vector2 $target): self
@@ -153,6 +166,12 @@ class Vector2
     }
 
     /**
+     * Returns a vector where the maximum magnitude in a single direction equals one
+     *
+     * NOTE: the naming might be wrong here. As normalize might indicate that
+     * the actual magnitude of the vector should equal one. Will have to look
+     * into this. For now, this logic is the desired behaviour.
+     *
      * @return Vector2
      */
     public function normalize(): self
