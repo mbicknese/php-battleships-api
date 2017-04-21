@@ -16,6 +16,12 @@ class Vector2
     const DIRECTION_SOUTH = 2;
     const DIRECTION_WEST = 3;
 
+    const COMPASS = [
+        -1 => [-1 => -1, 0 => self::DIRECTION_EAST, 1 => -1],
+        0  => [-1 => self::DIRECTION_NORTH, 0 => -1, 1 => self::DIRECTION_SOUTH],
+        1  => [-1 => -1, 0 => self::DIRECTION_WEST, 1 => -1],
+    ];
+
     /**
      * @var int
      */
@@ -114,5 +120,55 @@ class Vector2
             $this->y() > $grid->height() ||
             $this->y() < 0
         );
+    }
+
+    /**
+     * Calculates the difference between two vectors
+     *
+     * @param Vector2 $origin
+     * @param Vector2 $target
+     * @return Vector2
+     */
+    public static function diff(Vector2 $origin, Vector2 $target): self
+    {
+        return new static(
+            $target->x() - $origin->x(),
+            $target->y() - $origin->y()
+        );
+    }
+
+    /**
+     * Tries to determine the direction for a single axis
+     *
+     * @return int
+     * @throws CannotDetermineException on magnitude on multiple axis
+     */
+    public function singleAxisDirection(): int
+    {
+        if ($this->x() !== 0 && $this->y() !== 0) {
+            throw CannotDetermineException::magnitudeOnMultipleAxis($this);
+        }
+
+        return self::COMPASS[$this->normalize()->x()][$this->normalize()->y()];
+    }
+
+    /**
+     * @return Vector2
+     */
+    public function normalize(): self
+    {
+        $normalized = clone $this;
+        $strongestDirection = max(abs($this->x()), abs($this->y()));
+        $normalized->x = $normalized->x() ? $normalized->x() / $strongestDirection : 0;
+        $normalized->y = $normalized->y() ? $normalized->y() / $strongestDirection : 0;
+        return $normalized;
+    }
+
+    /**
+     * @return float
+     */
+    public function magnitude(): float
+    {
+        return sqrt(pow(abs($this->x()), 2) + pow(abs($this->y()), 2));
     }
 }
