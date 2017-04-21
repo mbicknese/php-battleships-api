@@ -1,6 +1,7 @@
 <?php
 namespace App\Security;
 
+use App\Model\Match\Match;
 use Symfony\Component\Security\Core\User\UserInterface;
 use App\Model\Match\Match as MatchModel;
 
@@ -112,5 +113,13 @@ class MatchPlayer implements UserInterface
     public function setSequence(int $sequence)
     {
         $this->sequence = $sequence;
+    }
+
+    /**
+     * @return MatchModel
+     */
+    public function getMatch(): Match
+    {
+        return $this->match;
     }
 }

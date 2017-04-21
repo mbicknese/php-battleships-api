@@ -25,14 +25,10 @@ class RouteTest extends BaseTestCase
         self::createSchema();
     }
 
-    /**
-     * @return string JWT to authenticate further calls
-     */
     public function testJoin()
     {
         self::$client->request('POST', '/match');
         $this->assertEquals(201, self::$client->getResponse()->getStatusCode());
-        return self::$client->getResponse()->headers->get('Authorization');
     }
 
     public function testDisplay()
@@ -47,6 +43,17 @@ class RouteTest extends BaseTestCase
     {
         $match = new Match(new MatchId());
         self::$kernel->getContainer()->get('app.repository.match')->persist($match);
-//        $validJWT =
+        $validJWT = self::$kernel->getContainer()->get('app.jwt')->encode([
+            'id'     => Uid64::toText($match->id()),
+            'player' => 1
+        ]);
+        $authorizationHeader = 'bearer ' . $validJWT;
+        self::$client->request('POST', '/ship', [
+            'start_x' => 1,
+            'start_y' => 1,
+            'end_x'   => 5,
+            'end_y'   => 1,
+        ], [], ['HTTP_Authorization' => $authorizationHeader]);
+        $this->assertEquals(200, self::$client->getResponse()->getStatusCode());
     }
 }
