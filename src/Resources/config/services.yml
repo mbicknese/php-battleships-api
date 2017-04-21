@@ -2,6 +2,9 @@ services:
   app.lobby:
     class: App\Gameplay\Lobby
     arguments: ["@app.repository.match"]
+  app.shipbuilder:
+    class: App\Gameplay\Shipbuilder
+    arguments: ["@app.repository.match"]
   app.jwt:
     class: App\Security\Jwt
     arguments: ["%env(APP_SECRET)%"]
@@ -14,7 +17,7 @@ services:
     arguments: ["@app.lobby", "@app.jwt", "@app.findMatch"]
   app.controller.ship:
     class: App\Controller\ShipController
-    arguments: ["@app.findMatch"]
+    arguments: ["@app.findMatch", "@app.shipbuilder"]
 
   app.repository.match:
     class: App\Repository\DoctrineMatchRepository

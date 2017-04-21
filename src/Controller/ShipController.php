@@ -1,8 +1,8 @@
 <?php
 namespace App\Controller;
 
+use App\Gameplay\Shipbuilder;
 use App\Model\Match\Match;
-use App\Model\Vector2;
 use App\Security\MatchPlayer;
 use App\Service\FindMatchService;
 use RuntimeException;
@@ -34,12 +34,17 @@ class ShipController
      * @var ValidatorInterface
      */
     private $validator;
+    /**
+     * @var Shipbuilder
+     */
+    private $shipBuilder;
 
     /**
      * ShipController constructor.
      * @param FindMatchService $findMatchService
+     * @param Shipbuilder $shipBuilder
      */
-    public function __construct(FindMatchService $findMatchService)
+    public function __construct(FindMatchService $findMatchService, Shipbuilder $shipBuilder)
     {
         $this->findMatchService = $findMatchService;
         $this->validator = Validation::createValidator();
@@ -50,6 +55,7 @@ class ShipController
                 'You just blew your change to place ships.',
             ]);
         }
+        $this->shipBuilder = $shipBuilder;
     }
 
     /**
@@ -75,19 +81,16 @@ class ShipController
         }
 
         try {
-            $direction = new Vector2(
-                $request->get('end_x') - $request->get('start_x'),
-                $request->get('end_y') - $request->get('start_y')
-            );
-            $matchPlayer->getMatch()->placeShip(
+            $this->shipBuilder->build(
+                $matchPlayer->getMatch(),
                 $matchPlayer->getSequence(),
                 $request->get('start_x'),
-                $request->get('start_x'),
-                $direction->magnitude(),
-                $direction->singleAxisDirection()
+                $request->get('start_y'),
+                $request->get('end_x'),
+                $request->get('end_y')
             );
         } catch (RuntimeException $exception) {
-            return new Response(400, $exception->getMessage());
+            return new Response($exception->getMessage(), 400);
         }
         return new Response();
     }
