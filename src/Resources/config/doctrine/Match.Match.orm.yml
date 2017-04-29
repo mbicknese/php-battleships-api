@@ -10,7 +10,6 @@ App\Model\Match\Match:
       class: App\Model\Grid
   fields:
     shipSet: { type: array }
-    phase: { type: smallint }
     slots: { type: smallint }
   oneToMany:
     ships:

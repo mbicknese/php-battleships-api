@@ -28,9 +28,9 @@ class Match
     private $id;
 
     /**
-     * @var int
+     * @var Collection|MatchPhase[]
      */
-    protected $phase = self::PHASE_WAITING;
+    protected $phases;
 
     /**
      * @var ArrayCollection|Ship[][]
@@ -66,6 +66,7 @@ class Match
         $this->id = $id;
         $this->ships = new ArrayCollection();
         $this->players = new ArrayCollection();
+        $this->phases = new ArrayCollection([new MatchPhase($this, self::PHASE_WAITING)]);
 
         $this->grid = $grid ?: new Grid(15, 15);
         $this->shipSet = $shipSet ?: [5, 4, 3, 3, 2];
@@ -81,11 +82,16 @@ class Match
     }
 
     /**
-     * @return int
+     * @return MatchPhase
      */
-    public function phase(): int
+    public function phase(): MatchPhase
     {
-        return $this->phase;
+        return array_reduce($this->phases->toArray(), function (?matchPhase $carry, matchPhase $item) {
+            if (! $carry) {
+                return $item;
+            }
+            return $carry->startedAt() > $item->startedAt() ? $carry : $item;
+        });
     }
 
     /**
@@ -208,5 +214,13 @@ class Match
     public function players(): Collection
     {
         return $this->players;
+    }
+
+    /**
+     * @param int $phase
+     */
+    public function progressToPhase(int $phase): void
+    {
+        $this->phases->add(new MatchPhase($this, $phase));
     }
 }

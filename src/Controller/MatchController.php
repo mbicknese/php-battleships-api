@@ -80,7 +80,7 @@ class MatchController
         }
 
         return new JsonResponse([
-            'phase'          => $match->phase(),
+            'phase'          => $match->phase()->phase(),
             'current_player' => 0, // Yet to be implemented
             'ships'          => $match->shipSet(),
             'grid'           => [$match->grid()->width(), $match->grid()->height()],

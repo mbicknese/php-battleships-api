@@ -44,4 +44,12 @@ class MatchPhase
     {
         return $this->phase;
     }
+
+    /**
+     * @return DateTimeImmutable
+     */
+    public function startedAt(): DateTimeImmutable
+    {
+        return $this->startedAt;
+    }
 }

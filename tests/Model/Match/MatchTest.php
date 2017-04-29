@@ -25,7 +25,7 @@ class MatchTest extends TestCase
 
         $this->assertInstanceOf(Match::class, $match);
         $this->assertInstanceOf(MatchId::class, $match->id());
-        $this->assertEquals(Match::PHASE_WAITING, $match->phase());
+        $this->assertEquals(Match::PHASE_WAITING, $match->phase()->phase());
     }
 
     public function testPlaceShip()
@@ -92,5 +92,12 @@ class MatchTest extends TestCase
 
         $this->expectException(NoSlotsAvailableException::class);
         $match->join();
+    }
+
+    public function testProgressToPhase()
+    {
+        $match = new Match(new MatchId());
+        $match->progressToPhase(Match::PHASE_FINISHED);
+        $this->assertEquals(Match::PHASE_FINISHED, $match->phase()->phase());
     }
 }
