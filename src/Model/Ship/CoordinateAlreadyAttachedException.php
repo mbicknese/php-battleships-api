@@ -11,5 +11,5 @@ use RuntimeException;
  */
 class CoordinateAlreadyAttachedException extends RuntimeException
 {
-
+    protected $message = 'My knowledge of quantum physics does not cover how a ship can occupy the same space twice';
 }

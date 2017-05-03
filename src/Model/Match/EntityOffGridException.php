@@ -11,5 +11,5 @@ use RuntimeException;
  */
 class EntityOffGridException extends RuntimeException
 {
-
+    protected $message = 'Whatever you were doing, please keep it on the grid where we can see it';
 }

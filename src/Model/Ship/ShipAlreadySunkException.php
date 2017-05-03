@@ -11,5 +11,5 @@ use RuntimeException;
  */
 class ShipAlreadySunkException extends RuntimeException
 {
-
+    protected $message = 'This ship won\'t get any deader mate';
 }

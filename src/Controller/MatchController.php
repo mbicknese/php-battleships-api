@@ -58,8 +58,8 @@ class MatchController
             'player' => count($match->players()),
         ];
         $headers = [
-            'Authentication' => $this->jwt->encode($data),
-            'Location'       => sprintf('/match/%s', $id),
+            'Authorization' => $this->jwt->encode($data),
+            'Location'      => sprintf('/match/%s', $id),
         ];
 
         return new JsonResponse($data, 201, $headers);

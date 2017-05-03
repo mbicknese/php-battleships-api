@@ -11,5 +11,5 @@ use RuntimeException;
  */
 class ShipsCollideException extends RuntimeException
 {
-
+    protected $message = 'There\'s a ship already in this position';
 }
