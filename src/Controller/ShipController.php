@@ -65,7 +65,7 @@ class ShipController
      */
     public function place(UserInterface $matchPlayer, Request $request): Response
     {
-        if ($matchPlayer->getMatch()->phase() !== Match::PHASE_WAITING) {
+        if ($matchPlayer->getMatch()->phase()->phase() !== Match::PHASE_WAITING) {
             return new Response($this->phaseOverMessage, 403);
         }
         $grid = $matchPlayer->getMatch()->grid();
