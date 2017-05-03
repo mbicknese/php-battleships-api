@@ -39,7 +39,7 @@ class MatchControllerTest extends BaseTestCase
         $response = self::$matchController->joinMatch();
         $content = json_decode($response->getContent(), true);
         $jwtContent = JWT::decode(
-            $response->headers->get('authentication'),
+            $response->headers->get('Authorization'),
             self::$kernel->getContainer()->getParameter('env(APP_SECRET)'),
             ['HS256']
         );

@@ -11,5 +11,5 @@ use RuntimeException;
  */
 class ShipAlreadyPlacedException extends RuntimeException
 {
-
+    protected $message = 'The limit for this kind of ships has been reached';
 }

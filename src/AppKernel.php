@@ -4,6 +4,7 @@ namespace App;
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
+use Symfony\Bundle\SecurityBundle\SecurityBundle;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Kernel;
@@ -27,6 +28,7 @@ class AppKernel extends Kernel
     {
         $bundles = [
             new FrameworkBundle(),
+            new SecurityBundle(),
             new DoctrineBundle(),
         ];
 
@@ -57,6 +59,7 @@ class AppKernel extends Kernel
     {
         $loader->load(__DIR__ . '/Resources/config/config_' . $this->getEnvironment() . '.yml');
         $loader->load(__DIR__ . '/Resources/config/services.yml');
+        $loader->load(__DIR__ . '/Resources/config/security.yml');
     }
 
     /**
@@ -82,5 +85,14 @@ class AppKernel extends Kernel
             [],
             ['GET']
         ), 'display');
+        $routes->addRoute(new Route(
+            '/ship',
+            ['_controller' => 'app.controller.ship:place'],
+            [],
+            [],
+            '',
+            [],
+            ['POST']
+        ), 'placeShip');
     }
 }

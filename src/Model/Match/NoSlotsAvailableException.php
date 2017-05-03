@@ -11,5 +11,5 @@ use RuntimeException;
  */
 class NoSlotsAvailableException extends RuntimeException
 {
-
+    protected $message = 'This match is already full on players';
 }
