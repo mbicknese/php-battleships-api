@@ -6,7 +6,6 @@ use App\Model\Ship\Ship;
 use App\Model\Ship\ShipAlreadyPlacedException;
 use App\Model\Ship\ShipCoordinate;
 use App\Model\Ship\ShipsCollideException;
-use App\Model\Vector2;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 
@@ -28,9 +27,9 @@ class Match
     private $id;
 
     /**
-     * @var int
+     * @var Collection|MatchPhase[]
      */
-    protected $phase = self::PHASE_WAITING;
+    protected $phases;
 
     /**
      * @var ArrayCollection|Ship[][]
@@ -66,6 +65,7 @@ class Match
         $this->id = $id;
         $this->ships = new ArrayCollection();
         $this->players = new ArrayCollection();
+        $this->phases = new ArrayCollection([new MatchPhase($this, self::PHASE_WAITING)]);
 
         $this->grid = $grid ?: new Grid(15, 15);
         $this->shipSet = $shipSet ?: [5, 4, 3, 3, 2];
@@ -81,11 +81,16 @@ class Match
     }
 
     /**
-     * @return int
+     * @return MatchPhase
      */
-    public function phase(): int
+    public function phase(): MatchPhase
     {
-        return $this->phase;
+        return array_reduce($this->phases->toArray(), function (?matchPhase $carry, matchPhase $item) {
+            if (! $carry) {
+                return $item;
+            }
+            return $carry->startedAt() > $item->startedAt() ? $carry : $item;
+        });
     }
 
     /**
@@ -107,6 +112,7 @@ class Match
     /**
      * Places a ship on the grid
      *
+     * @throws ShipAlreadyPlacedException
      * @throws EntityOffGridException
      * @throws ShipsCollideException
      *
@@ -124,7 +130,7 @@ class Match
             throw new ShipAlreadyPlacedException();
         }
 
-        /** @var Vector2[] $coordinates */
+        /** @var ShipCoordinate[] $coordinates */
         $coordinates = [new ShipCoordinate($x, $y)];
         for ($i = 1; $i < $length; ++$i) {
             $coordinate = $coordinates[$i - 1]->move($direction);
@@ -142,7 +148,24 @@ class Match
         }
 
         $this->addShip($ship);
+        $this->progressToPlayingIfApplicable();
         return $ship;
+    }
+
+    /**
+     * Checks if all players placed their ships and if so, progresses match phase to "playing"
+     */
+    protected function progressToPlayingIfApplicable(): void
+    {
+        for ($player = 1; $player <= $this->slots; ++$player) {
+            foreach ($this->shipSet() as $shipType) {
+                if ($this->isAnotherShipAllowed($player, $shipType)) {
+                    return;
+                }
+            }
+        }
+
+        $this->progressToPhase(static::PHASE_PLAYING);
     }
 
     /**
@@ -208,5 +231,13 @@ class Match
     public function players(): Collection
     {
         return $this->players;
+    }
+
+    /**
+     * @param int $phase
+     */
+    public function progressToPhase(int $phase): void
+    {
+        $this->phases->add(new MatchPhase($this, $phase));
     }
 }

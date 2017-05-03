@@ -1,0 +1,12 @@
+App\Model\Match\MatchPhase:
+  type: entity
+  table: match_phase
+  id:
+    match: { associationKey: true }
+    phase: { type: integer }
+  fields:
+    startedAt: { type: datetime, column: started_at }
+  manyToOne:
+    match:
+      targetEntity: App\Model\Match\Match
+      inversedBy: phases
