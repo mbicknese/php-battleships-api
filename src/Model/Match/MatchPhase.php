@@ -46,9 +46,9 @@ class MatchPhase
     }
 
     /**
-     * @return DateTimeImmutable
+     * @return DateTimeInterface
      */
-    public function startedAt(): DateTimeImmutable
+    public function startedAt(): DateTimeInterface
     {
         return $this->startedAt;
     }
