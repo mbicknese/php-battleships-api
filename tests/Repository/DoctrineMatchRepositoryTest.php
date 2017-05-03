@@ -37,6 +37,8 @@ class DoctrineMatchRepositoryTest extends BaseTestCase
         $this->assertEquals($persistedMatch->id(), $match->id());
         $this->assertEquals(15, $match->grid()->height());
         $this->assertEquals(15, $match->grid()->width());
+
+        $this->em->flush();
     }
 
     public function testFindOneOpen()
@@ -50,12 +52,13 @@ class DoctrineMatchRepositoryTest extends BaseTestCase
         $this->em->flush();
         $this->em->detach($match);
 
+        /** @var Match $persistedMatch */
         $persistedMatch = $this->em->getRepository(Match::class)->findOneOpen();
+
+        $persistedMatch->join();
+        $persistedMatch->join();
+
         $this->assertEquals($persistedMatch->id(), $match->id());
-
-        $persistedMatch->join();
-        $persistedMatch->join();
-
         $this->em->flush();
 
         $emptyResult2 = $this->em->getRepository(Match::class)->findOneOpen();

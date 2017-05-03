@@ -1,6 +1,7 @@
 <?php
 namespace App\Tests\Model\Match;
 
+use App\Model\Grid;
 use App\Model\Match\EntityOffGridException;
 use App\Model\Match\Match;
 use App\Model\Match\MatchId;
@@ -30,9 +31,9 @@ class MatchTest extends TestCase
 
     public function testPlaceShip()
     {
-        $match = new Match(new MatchId());
-        $ship1 = $match->placeShip(0, 1, 1, 3, Vector2::DIRECTION_SOUTH);
-        $ship2 = $match->placeShip(0, 3, 1, 2, Vector2::DIRECTION_EAST);
+        $match = new Match(new MatchId(), new Grid(15, 15), [2, 3]);
+        $ship1 = $match->placeShip(1, 1, 1, 3, Vector2::DIRECTION_SOUTH);
+        $ship2 = $match->placeShip(1, 3, 1, 2, Vector2::DIRECTION_EAST);
         $this->assertArraySubset(
             [new ShipCoordinate(1, 1, $ship1), new ShipCoordinate(1, 2, $ship1), new ShipCoordinate(1, 3, $ship1)],
             $ship1->coordinates()
@@ -50,9 +51,9 @@ class MatchTest extends TestCase
     public function testPlaceShipNoCollision()
     {
         $match = new Match(new MatchId());
-        $player0Ship1 = $match->placeShip(0, 1, 1, 3, Vector2::DIRECTION_SOUTH);
-        $player0Ship2 = $match->placeShip(0, 3, 1, 3, Vector2::DIRECTION_SOUTH);
-        $player1Ship1 = $match->placeShip(1, 1, 1, 3, Vector2::DIRECTION_SOUTH);
+        $player0Ship1 = $match->placeShip(1, 1, 1, 3, Vector2::DIRECTION_SOUTH);
+        $player0Ship2 = $match->placeShip(1, 3, 1, 3, Vector2::DIRECTION_SOUTH);
+        $player1Ship1 = $match->placeShip(2, 1, 1, 3, Vector2::DIRECTION_SOUTH);
 
         $this->assertFalse($player0Ship1->collidesWith($player0Ship2));
         $this->assertTrue($player0Ship1->collidesWith($player1Ship1));
@@ -80,8 +81,8 @@ class MatchTest extends TestCase
         $this->expectException(ShipsCollideException::class);
 
         $match = new Match(new MatchId());
-        $match->placeShip(0, 1, 1, 3, Vector2::DIRECTION_SOUTH);
-        $match->placeShip(0, 1, 1, 3, Vector2::DIRECTION_SOUTH);
+        $match->placeShip(1, 1, 1, 3, Vector2::DIRECTION_SOUTH);
+        $match->placeShip(1, 1, 1, 3, Vector2::DIRECTION_SOUTH);
     }
 
     public function testJoinTooMany()

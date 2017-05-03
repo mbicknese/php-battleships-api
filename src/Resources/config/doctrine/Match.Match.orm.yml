@@ -27,3 +27,4 @@ App\Model\Match\Match:
       mappedBy: match
       cascade:
        - persist
+       - detach

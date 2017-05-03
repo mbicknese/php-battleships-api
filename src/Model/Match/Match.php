@@ -113,6 +113,7 @@ class Match
     /**
      * Places a ship on the grid
      *
+     * @throws ShipAlreadyPlacedException
      * @throws EntityOffGridException
      * @throws ShipsCollideException
      *
@@ -130,7 +131,7 @@ class Match
             throw new ShipAlreadyPlacedException();
         }
 
-        /** @var Vector2[] $coordinates */
+        /** @var ShipCoordinate[] $coordinates */
         $coordinates = [new ShipCoordinate($x, $y)];
         for ($i = 1; $i < $length; ++$i) {
             $coordinate = $coordinates[$i - 1]->move($direction);
@@ -148,7 +149,24 @@ class Match
         }
 
         $this->addShip($ship);
+        $this->progressToPlayingIfApplicable();
         return $ship;
+    }
+
+    /**
+     * Checks if all players placed their ships and if so, progresses match phase to "playing"
+     */
+    protected function progressToPlayingIfApplicable(): void
+    {
+        for ($player = 1; $player <= $this->slots; ++$player) {
+            foreach ($this->shipSet() as $shipType) {
+                if ($this->isAnotherShipAllowed($player, $shipType)) {
+                    return;
+                }
+            }
+        }
+
+        $this->progressToPhase(static::PHASE_PLAYING);
     }
 
     /**
