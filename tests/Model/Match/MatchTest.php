@@ -46,6 +46,10 @@ class MatchTest extends TestCase
         $this->assertCount(2, $ship2->coordinates());
         $this->assertEquals(1, $ship1->sequence());
         $this->assertEquals(2, $ship2->sequence());
+
+        $match->placeShip(2, 1, 1, 3, Vector2::DIRECTION_SOUTH);
+        $match->placeShip(2, 3, 1, 2, Vector2::DIRECTION_EAST);
+        $this->assertEquals(Match::PHASE_PLAYING, $match->phase()->phase());
     }
 
     public function testPlaceShipNoCollision()
