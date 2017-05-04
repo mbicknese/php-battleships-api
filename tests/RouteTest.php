@@ -5,6 +5,7 @@ use App\Model\Match\Match;
 use App\Model\Match\MatchId;
 use App\Uid64\Uid64;
 use Symfony\Bundle\FrameworkBundle\Client;
+use Symfony\Component\DomCrawler\Crawler;
 
 /**
  * Class HttpTest
@@ -41,6 +42,42 @@ class RouteTest extends BaseTestCase
 
     public function testPlaceShip()
     {
+        $this->requestAuthenticated('POST', '/ship', [
+            'start_x' => 1,
+            'start_y' => 1,
+            'end_x'   => 5,
+            'end_y'   => 1,
+        ]);
+        $this->assertEquals(200, self::$client->getResponse()->getStatusCode());
+    }
+
+    public function testFireShot()
+    {
+        $this->requestAuthenticated('POST', '/shot', [
+            'x' => 1,
+            'y' => 1,
+        ]);
+        $this->assertEquals(200, self::$client->getResponse()->getStatusCode());
+    }
+
+    /**
+     * Makes a HTTP request which is pre authenticated
+     *
+     * @param string $method
+     * @param string $uri
+     * @param array $parameters (optional)
+     * @param array $files (optional)
+     * @param array $server (optional)
+     *
+     * @return Crawler
+     */
+    protected function requestAuthenticated(
+        string $method,
+        string $uri,
+        array $parameters = [],
+        array $files = [],
+        array $server = []
+    ): Crawler {
         $match = new Match(new MatchId());
         self::$kernel->getContainer()->get('app.repository.match')->persist($match);
         $validJWT = self::$kernel->getContainer()->get('app.jwt')->encode([
@@ -48,12 +85,12 @@ class RouteTest extends BaseTestCase
             'player' => 1
         ]);
         $authorizationHeader = 'bearer ' . $validJWT;
-        self::$client->request('POST', '/ship', [
-            'start_x' => 1,
-            'start_y' => 1,
-            'end_x'   => 5,
-            'end_y'   => 1,
-        ], [], ['HTTP_Authorization' => $authorizationHeader]);
-        $this->assertEquals(200, self::$client->getResponse()->getStatusCode());
+        return self::$client->request(
+            $method,
+            $uri,
+            $parameters,
+            $files,
+            array_merge($server, ['HTTP_Authorization' => $authorizationHeader])
+        );
     }
 }

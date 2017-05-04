@@ -9,3 +9,4 @@ security:
         authenticators: ["app.jwt_authenticator"]
   access_control:
     - { path: ^/ship, roles: ROLE_PLAYER}
+    - { path: ^/shot, roles: ROLE_PLAYER}

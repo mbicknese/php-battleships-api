@@ -18,6 +18,9 @@ services:
   app.controller.ship:
     class: App\Controller\ShipController
     arguments: ["@app.findMatch", "@app.shipbuilder"]
+  app.controller.shot:
+    class: App\Controller\ShotController
+    arguments: []
 
   app.repository.match:
     class: App\Repository\DoctrineMatchRepository
