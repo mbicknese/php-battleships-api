@@ -1,6 +1,7 @@
 <?php
 namespace App\Tests\Repository;
 
+use App\Common\Collections\PlayerCollection;
 use App\Model\Match\Match;
 use App\Model\Match\MatchId;
 use App\Model\Vector2;

@@ -1,6 +1,7 @@
 <?php
 namespace App\Model\Match;
 
+use App\Common\Collections\PlayerCollection;
 use App\Model\Grid;
 use App\Model\Ship\Ship;
 use App\Model\Ship\ShipAlreadyPlacedException;
@@ -32,9 +33,13 @@ class Match
     protected $phases;
 
     /**
-     * @var ArrayCollection|Ship[][]
+     * @var PlayerCollection|Ship[][]
      */
     protected $ships;
+    /**
+     * @var PlayerCollection|Shot[][]
+     */
+    protected $shots;
 
     /**
      * @var Grid
@@ -63,7 +68,8 @@ class Match
     public function __construct(MatchId $id, Grid $grid = null, array $shipSet = null, int $slots = 2)
     {
         $this->id = $id;
-        $this->ships = new ArrayCollection();
+        $this->ships = new PlayerCollection();
+        $this->shots = new PlayerCollection();
         $this->players = new ArrayCollection();
         $this->phases = new ArrayCollection([new MatchPhase($this, self::PHASE_WAITING)]);
 
@@ -198,17 +204,28 @@ class Match
     /**
      * Returns read only array of ships
      *
-     * @param int $player
+     * @param int|null $player
      * @return array
+     * @fixme See if Doctrine can be set to auto map to PlayerCollection
      */
     public function ships(int $player = null): array
     {
-        if ($player === null) {
-            return $this->ships->toArray();
+        if (! $this->ships instanceof PlayerCollection) {
+            $this->ships = new PlayerCollection($this->ships->toArray());
         }
-        return array_filter($this->ships->toArray(), function (Ship $ship) use ($player) {
-            return $ship->player() === $player;
-        });
+        return $this->ships->toArray($player);
+    }
+
+    /**
+     * @param int|null $player
+     * @return array
+     */
+    public function shots(int $player = null): array
+    {
+        if (! $this->shots instanceof PlayerCollection) {
+            $this->shots = new PlayerCollection($this->shots->toArray());
+        }
+        return $this->shots->toArray($player);
     }
 
     /**
