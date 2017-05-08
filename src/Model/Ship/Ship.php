@@ -55,6 +55,14 @@ class Ship
     }
 
     /**
+     * @return ShipId
+     */
+    public function id(): ShipId
+    {
+        return $this->id;
+    }
+
+    /**
      * @return iterable|ShipCoordinate[]|Collection
      */
     public function coordinates(): iterable

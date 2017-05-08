@@ -51,8 +51,8 @@ class DoctrineShipRepositoryTest extends BaseTestCase
         $this->assertCount(3, $ships);
         $this->assertCount(3, $match->ships());
         $this->assertCount(3, $persistedMatch->ships());
-        $this->assertEquals($ship, $persistedMatch->ships()[0]);
-        $this->assertEquals(new ShipCoordinate(1, 1, $ship), $persistedMatch->ships()[0]->coordinates()[0]);
+        $this->assertEquals($ship->id(), $persistedMatch->ships()[0]->id());
+        $this->assertTrue((new ShipCoordinate(1, 1, $ship))->equals($persistedMatch->ships()[0]->coordinates()[0]));
     }
 
     public function testPersistShipParallel(): void
