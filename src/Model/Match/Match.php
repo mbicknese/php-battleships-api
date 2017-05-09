@@ -257,4 +257,30 @@ class Match
     {
         $this->phases->add(new MatchPhase($this, $phase));
     }
+
+    /**
+     * @param int $player
+     * @param int $x
+     * @param int $y
+     * @return Shot
+     *
+     * @fixme Think about multiplayer gameplay and who gets fired upon
+     */
+    public function fireShot(int $player, int $x, int $y): Shot
+    {
+        $shot = new Shot($x, $y, $this, $player);
+        if ($shot->isOffGrid($this->grid())) {
+            throw new EntityOffGridException();
+        }
+        $opponent = $player === 1 ? 2 : 1;
+
+        foreach ($this->ships($opponent) as $ship) {
+            if ($shot->doesHit($ship)) {
+                $shot->hits($ship, $this->shots($player));
+                break;
+            }
+        }
+
+        return $shot;
+    }
 }

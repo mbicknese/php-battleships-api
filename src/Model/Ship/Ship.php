@@ -1,6 +1,7 @@
 <?php
 namespace App\Model\Ship;
 
+use App\Model\BelongsToPlayer;
 use App\Model\Match\Match;
 use Doctrine\Common\Collections\Collection;
 
@@ -10,7 +11,7 @@ use Doctrine\Common\Collections\Collection;
  * @package App\Model\Ship
  * @author  Maarten Bicknese <maarten.bicknese@devmob.com>
  */
-class Ship
+class Ship implements BelongsToPlayer
 {
     /**
      * @var ShipId

@@ -52,6 +52,8 @@ class ShotController
             return new Response('For once, please, stick to the rules!', 400);
         }
 
+        // Fire the shot
+
         $id = Uid64::toText($matchPlayer->getMatch()->id());
         return new Response('', 201, ['Location' => sprintf('/match/%s', $id)]);
     }
