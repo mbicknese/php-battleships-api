@@ -6,7 +6,9 @@ use App\Model\Grid;
 use App\Model\Ship\Ship;
 use App\Model\Ship\ShipAlreadyPlacedException;
 use App\Model\Ship\ShipCoordinate;
+use App\Model\Ship\ShipPlacement;
 use App\Model\Ship\ShipsCollideException;
+use App\Model\Shot\Shot;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 

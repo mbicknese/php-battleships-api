@@ -8,7 +8,7 @@ namespace App\Model;
 interface BelongsToPlayer
 {
     /**
-     * @return int
+     * @return int|null
      */
-    public function player(): int;
+    public function player(): ?int;
 }

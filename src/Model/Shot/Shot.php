@@ -1,7 +1,8 @@
 <?php
-namespace App\Model\Match;
+namespace App\Model\Shot;
 
 use App\Model\BelongsToPlayer;
+use App\Model\Match\Match;
 use App\Model\Ship\Ship;
 use App\Model\Vector2;
 

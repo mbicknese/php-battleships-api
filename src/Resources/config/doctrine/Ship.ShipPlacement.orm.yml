@@ -1,0 +1,11 @@
+App\Model\Ship\ShipPlacement:
+  type: embeddable
+  fields:
+    match:
+      associationKey: true
+    player:
+      type: smallint
+      nullable: true
+    sequence:
+      type: smallint
+      nullable: true
