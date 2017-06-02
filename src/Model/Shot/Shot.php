@@ -80,7 +80,7 @@ class Shot extends Vector2 implements BelongsToPlayer
     public function hits(Ship $ship, ?array $previousShots = []): void
     {
         $this->hasHit = true;
-        $hitCount = 0;
+        $hitCount = 1;
         foreach ($previousShots as $shot) {
             if ($shot->doesHit($ship)) {
                 $hitCount++;
@@ -97,6 +97,11 @@ class Shot extends Vector2 implements BelongsToPlayer
      */
     public function doesHit(Ship $ship): bool
     {
-        return array_search($this, $ship->coordinates()->toArray());
+        foreach ($ship->coordinates() as $coordinate) {
+            if ($this->x() == $coordinate->x() && $this->y() == $coordinate->y()) {
+                return true;
+            }
+        }
+        return false;
     }
 }

@@ -53,14 +53,15 @@ class RouteTest extends BaseTestCase
 
     public function testFireShot()
     {
-        $this->markTestIncomplete(
-            'This test has not been implemented yet.'
-        );
+        $match = new Match(new MatchId());
+        $match->progressToPhase(Match::PHASE_PLAYING);
         $this->requestAuthenticated('POST', '/shot', [
             'x' => 1,
             'y' => 1,
-        ]);
-        $this->assertEquals(200, self::$client->getResponse()->getStatusCode());
+        ], [], [], $match);
+        $response = self::$client->getResponse();
+
+        $this->assertEquals(201, $response->getStatusCode(), $response->getContent());
     }
 
     /**
@@ -71,7 +72,7 @@ class RouteTest extends BaseTestCase
      * @param array $parameters (optional)
      * @param array $files (optional)
      * @param array $server (optional)
-     *
+     * @param Match|null $match
      * @return Crawler
      */
     protected function requestAuthenticated(
@@ -79,9 +80,12 @@ class RouteTest extends BaseTestCase
         string $uri,
         array $parameters = [],
         array $files = [],
-        array $server = []
+        array $server = [],
+        Match $match = null
     ): Crawler {
-        $match = new Match(new MatchId());
+        if (!$match) {
+            $match = new Match(new MatchId());
+        }
         self::$kernel->getContainer()->get('app.repository.match')->persist($match);
         $validJWT = self::$kernel->getContainer()->get('app.jwt')->encode([
             'id'     => Uid64::toText($match->id()),

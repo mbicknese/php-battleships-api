@@ -38,7 +38,7 @@ class ShotController
     public function fire(UserInterface $matchPlayer, Request $request): Response
     {
         if ($matchPlayer->getMatch()->phase()->phase() !== Match::PHASE_PLAYING) {
-            return new Response('', 403);
+            return new Response('Game needs to be in progress to fire shots, dummy.', 403);
         }
 
         /** @var Grid $grid */
