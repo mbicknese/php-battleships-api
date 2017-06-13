@@ -23,7 +23,7 @@ class DoctrineMatchRepositoryTest extends BaseTestCase
 
     public function setUp()
     {
-        self::createClient();
+        self::bootKernel();
         self::createSchema();
         $this->em = self::$kernel->getContainer()->get('doctrine')->getManager();
     }

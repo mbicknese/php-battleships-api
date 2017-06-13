@@ -21,7 +21,7 @@ class JwtAuthenticatorTest extends BaseTestCase
 {
     public function setUp()
     {
-        $this->createClient();
+        self::bootKernel();
         $this->createSchema();
     }
 
