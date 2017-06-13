@@ -18,6 +18,12 @@ App\Model\Match\Match:
       cascade:
         - persist
         - detach
+    shots:
+      targetEntity: App\Model\Shot\Shot
+      mappedBy: match
+      cascade:
+       - persist
+       - detach
     players:
       targetEntity: App\Model\Match\Player
       mappedBy: match

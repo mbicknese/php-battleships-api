@@ -30,6 +30,10 @@ class Shot extends Vector2 implements BelongsToPlayer
      * @var int
      */
     private $player;
+    /**
+     * @var ShotId
+     */
+    private $id;
 
     /**
      * Shot constructor.
@@ -43,6 +47,7 @@ class Shot extends Vector2 implements BelongsToPlayer
     public function __construct(int $x, int $y, Match $match, int $player, bool $hasHit = false, bool $hasSunk = false)
     {
         parent::__construct($x, $y);
+        $this->id = new ShotId();
         $this->match = $match;
         $this->player = $player;
         $this->hasHit = $hasHit;
