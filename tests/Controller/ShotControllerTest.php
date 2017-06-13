@@ -1,6 +1,7 @@
 <?php
 namespace App\Tests\Controller;
 
+use App\Controller\ShotController;
 use App\Model\Match\Match;
 use App\Model\Match\MatchId;
 use App\Security\MatchPlayer;
@@ -15,6 +16,9 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class ShotControllerTest extends BaseTestCase
 {
+    /**
+     * @var ShotController
+     */
     private static $shotController;
 
     public static function setUpBeforeClass()
@@ -69,5 +73,16 @@ class ShotControllerTest extends BaseTestCase
 
         $response = $controller->fire($matchPlayer, new Request([], ['x' => -1, 'y' => 1]));
         $this->assertEquals(400, $response->getStatusCode());
+    }
+
+    public function testFireMatchFinished()
+    {
+        $controller = self::$shotController;
+        $match = new Match(new MatchId());
+        $match->progressToPhase(Match::PHASE_FINISHED);
+        $matchPlayer = new MatchPlayer($match);
+
+        $response = $controller->fire($matchPlayer, new Request());
+        $this->assertEquals(403, $response->getStatusCode());
     }
 }
