@@ -1,6 +1,7 @@
 <?php
 namespace App\Controller;
 
+use App\Gameplay\Combat;
 use App\Model\Grid;
 use App\Model\Match\Match;
 use App\Security\MatchPlayer;
@@ -21,13 +22,19 @@ use Symfony\Component\Validator\Validation;
 class ShotController
 {
     private $validator;
+    /**
+     * @var Combat
+     */
+    private $combat;
 
     /**
      * ShotController constructor.
+     * @param Combat $combat
      */
-    public function __construct()
+    public function __construct(Combat $combat)
     {
         $this->validator = Validation::createValidator();
+        $this->combat = $combat;
     }
 
     /**
@@ -52,7 +59,12 @@ class ShotController
             return new Response('For once, please, stick to the rules!', 400);
         }
 
-        // Fire the shot
+        $this->combat->fireShot(
+            $matchPlayer->getMatch(),
+            $request->get('x'),
+            $request->get('y'),
+            $matchPlayer->getSequence()
+        );
 
         $id = Uid64::toText($matchPlayer->getMatch()->id());
         return new Response('', 201, ['Location' => sprintf('/match/%s', $id)]);

@@ -6,7 +6,6 @@ use App\Model\Grid;
 use App\Model\Ship\Ship;
 use App\Model\Ship\ShipAlreadyPlacedException;
 use App\Model\Ship\ShipCoordinate;
-use App\Model\Ship\ShipPlacement;
 use App\Model\Ship\ShipsCollideException;
 use App\Model\Shot\Shot;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -212,6 +211,9 @@ class Match
      */
     public function ships(int $player = null): array
     {
+        if (! $this->ships) {
+            return [];
+        }
         if (! $this->ships instanceof PlayerCollection) {
             $this->ships = new PlayerCollection($this->ships->toArray());
         }
@@ -224,6 +226,9 @@ class Match
      */
     public function shots(int $player = null): array
     {
+        if (! $this->shots) {
+            return [];
+        }
         if (! $this->shots instanceof PlayerCollection) {
             $this->shots = new PlayerCollection($this->shots->toArray());
         }
@@ -283,6 +288,7 @@ class Match
             }
         }
 
+        $this->shots->add($shot);
         return $shot;
     }
 }

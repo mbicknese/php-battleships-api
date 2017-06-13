@@ -100,9 +100,9 @@ class MatchPlayer implements UserInterface
     }
 
     /**
-     * @return int
+     * @return int|null
      */
-    public function getSequence(): int
+    public function getSequence(): ?int
     {
         return $this->sequence;
     }

@@ -5,6 +5,9 @@ services:
   app.shipbuilder:
     class: App\Gameplay\Shipbuilder
     arguments: ["@app.repository.match"]
+  app.combat:
+    class: App\Gameplay\Combat
+    arguments: ["@app.repository.match"]
   app.jwt:
     class: App\Security\Jwt
     arguments: ["%env(APP_SECRET)%"]
@@ -20,7 +23,7 @@ services:
     arguments: ["@app.findMatch", "@app.shipbuilder"]
   app.controller.shot:
     class: App\Controller\ShotController
-    arguments: []
+    arguments: ["@app.combat"]
 
   app.repository.match:
     class: App\Repository\DoctrineMatchRepository
