@@ -20,7 +20,7 @@ class MatchControllerTest extends BaseTestCase
 
     public static function setUpBeforeClass()
     {
-        self::createClient();
+        self::bootKernel();
         self::createSchema();
         self::$matchController = self::$kernel->getContainer()->get('app.controller.match');
     }

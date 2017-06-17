@@ -16,7 +16,7 @@ class BaseTestCase extends WebTestCase
      */
     protected static function createSchema()
     {
-        if (self::$kernel === null) {
+        if (self::$kernel->getContainer() === null) {
             throw new \RuntimeException('Can not create schema before kernel boot');
         }
         /** @var EntityManager $em */

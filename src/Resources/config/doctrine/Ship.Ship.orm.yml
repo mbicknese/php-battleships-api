@@ -20,6 +20,7 @@ App\Model\Ship\Ship:
       mappedBy: ship
       cascade:
         - persist
+        - detach
   uniqueConstraints:
     match_ships_idx:
       columns: [ match_id, sequence ]

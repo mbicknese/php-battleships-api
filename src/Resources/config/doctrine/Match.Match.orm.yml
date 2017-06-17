@@ -17,11 +17,19 @@ App\Model\Match\Match:
       mappedBy: match
       cascade:
         - persist
+        - detach
+    shots:
+      targetEntity: App\Model\Shot\Shot
+      mappedBy: match
+      cascade:
+       - persist
+       - detach
     players:
       targetEntity: App\Model\Match\Player
       mappedBy: match
       cascade:
        - persist
+       - detach
     phases:
       targetEntity: App\Model\Match\MatchPhase
       mappedBy: match

@@ -94,5 +94,14 @@ class AppKernel extends Kernel
             [],
             ['POST']
         ), 'placeShip');
+        $routes->addRoute(new Route(
+            '/shot',
+            ['_controller' => 'app.controller.shot:fire'],
+            [],
+            [],
+            '',
+            [],
+            ['POST']
+        ), 'fireShot');
     }
 }

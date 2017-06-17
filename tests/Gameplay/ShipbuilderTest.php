@@ -22,7 +22,7 @@ class ShipbuilderTest extends BaseTestCase
 
     public static function setUpBeforeClass()
     {
-        self::createClient();
+        self::bootKernel();
         self::createSchema();
         self::$em = self::$kernel->getContainer()->get('doctrine')->getManager();
     }

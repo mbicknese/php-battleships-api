@@ -31,9 +31,11 @@ doctrine:
         mapping_types:
           match_id: match_id
           ship_id: ship_id
+          shot_id: shot_id
     types:
       match_id: App\Repository\Type\MatchIdType
       ship_id: App\Repository\Type\ShipIdType
+      shot_id: App\Repository\Type\ShotIdType
   orm:
     auto_generate_proxy_classes: "%kernel.debug%"
     mappings:

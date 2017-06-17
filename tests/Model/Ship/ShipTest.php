@@ -5,7 +5,6 @@ use App\Model\Match\MatchId;
 use App\Model\Match\Match;
 use App\Model\Ship\Ship;
 use App\Model\Ship\ShipCoordinate;
-use App\Model\Vector2;
 use PHPUnit\Framework\TestCase;
 
 /**

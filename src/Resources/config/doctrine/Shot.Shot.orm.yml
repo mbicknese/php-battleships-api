@@ -1,0 +1,15 @@
+App\Model\Shot\Shot:
+  type: entity
+  table: shot
+  id:
+    id: { type: shot_id }
+  fields:
+    x: { type: integer}
+    y: { type: integer }
+    hasHit: { type: boolean, column: has_hit }
+    hasSunk: { type: boolean, column: has_sunk }
+    player: { type: smallint }
+  manyToOne:
+    match:
+      targetEntity: App\Model\Match\Match
+      inversedBy: shots
