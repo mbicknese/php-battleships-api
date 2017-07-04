@@ -1,5 +1,5 @@
 <?php
-require __DIR__ . '/../autoload.php';
+require __DIR__ . '/../vendor/autoload.php';
 
 $env = getenv('SYMFONY_ENV');
 $debug = getenv('SYMFONY_DEBUG');
