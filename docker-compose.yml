@@ -1,47 +1,29 @@
-version: '2.0'
-
-volumes:
-  db:
-    driver: local
-
+version: '2'
 services:
-  db:
-    image: mariadb:10.1
-    environment:
-      MYSQL_ROOT_PASSWORD: pass
-      MYSQL_DATABASE: symfony
-      MYSQL_USER: symfony
-      MYSQL_PASSWORD: symfony
-    ports:
-    - "3306:3306"
-    volumes:
-    - "db:/var/lib/mysql"
-  app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    image: yoshz/symfony-docker-bootstrap-app
-    environment:
-      DB_DRIVER: pdo_mysql
-      DB_HOST: db
-      DB_NAME: symfony
-      DB_USER: symfony
-      DB_PASSWORD: symfony
-      SYMFONY_ENV: dev
-      SYMFONY_DEBUG: 1
-      PHP_IDE_CONFIG: "serverName=docker"
-    volumes:
-    - ".:/var/www"
-    command: ["/usr/sbin/php-fpm", "-F", "-d", "zend_extension=xdebug.so"]
-  web:
-    build:
-      context: .
-      dockerfile: Dockerfile.web
-    image: yoshz/symfony-docker-bootstrap-web
-    ports:
-    - "80:80"
-    volumes:
-    - "./server/nginx.conf:/etc/nginx/conf.d/default.conf:ro"
-    - "./web:/var/www/web:ro"
-    depends_on:
-    - app
+    db:
+        image: mariadb:latest
+        ports:
+            - "3306:3306"
+        environment:
+            MYSQL_ROOT_PASSWORD: root
+            MYSQL_DATABASE: symfony
+            MYSQL_USER: symfony
+            MYSQL_PASSWORD: symfony
+    php:
+        image: php:7.1-fpm-alpine
+        expose:
+            - "9000"
+        volumes:
+            - .:/code
+        links:
+            - db
+    web:
+        image: nginx
+        ports:
+            - "80:80"
+        links:
+            - php
+        volumes:
+            - ./nginx.conf:/etc/nginx/conf.d/default.conf
+        volumes_from:
+            - php
