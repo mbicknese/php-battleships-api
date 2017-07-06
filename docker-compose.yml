@@ -10,12 +10,19 @@ services:
             MYSQL_USER: symfony
             MYSQL_PASSWORD: symfony
     php:
-        image: php:7.1-fpm-alpine
+        build:
+            context: .
         volumes:
             - .:/code
         environment:
             SYMFONY_ENV: dev
             SYMFONY_DEBUG: 1
+            APP_SECRET: GenerateSecretHere
+            DB_DRIVER: pdo_mysql
+            DB_USER: symfony
+            DB_PASSWORD: symfony
+            DB_NAME: symfony
+            DB_HOST: db
         links:
             - db
     web:
