@@ -10,7 +10,7 @@ pipeline {
         -v $COMPOSER_HOME:/tmp \
         composer install -n -o'
     }
-  },
+  }
   stage('test') {
     steps {
       sh 'docker run \
@@ -20,7 +20,7 @@ pipeline {
         -w /app \
         php -f vendor/bin/phpunit'
     }
-  },
+  }
   stage('deploy') {
     echo "No deployment setup at the moment.."
   }
