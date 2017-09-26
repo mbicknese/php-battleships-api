@@ -23,7 +23,9 @@ pipeline {
       }
     }
     stage('deploy') {
-      echo "No deployment setup at the moment.."
+      steps {
+          echo "No deployment setup at the moment.."
+      }
     }
   }
 }
