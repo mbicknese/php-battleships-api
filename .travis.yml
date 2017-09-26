@@ -11,8 +11,11 @@ sudo: false
 notifications:
   email: false
 
+directories:
+  - $HOME/.composer/cache/files
+
 install:
-  - composer install
+  - composer install --prefer-dist
   - composer require codacy/coverage
 
 script:

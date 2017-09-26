@@ -40,7 +40,7 @@ class AppKernel extends Kernel
      */
     public function getCacheDir(): string
     {
-        return '/dev/shm/cache/' . $this->getEnvironment();
+        return  __DIR__ . '/../var/cache/' . $this->getEnvironment();
     }
 
     /**
@@ -48,7 +48,7 @@ class AppKernel extends Kernel
      */
     public function getLogDir(): string
     {
-        return '/dev/shm/logs';
+        return __DIR__ . '/../var/log/php';
     }
 
     /**

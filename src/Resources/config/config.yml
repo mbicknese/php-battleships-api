@@ -3,9 +3,9 @@ parameters:
   env(DB_DRIVER): pdo_sqlite
   env(DB_HOST): ~
   env(DB_PORT): ~
-  env(DB_NAME): ~
-  env(DB_USER): ~
-  env(DB_PASSWORD): ~
+  env(MYSQL_DATABASE): ~
+  env(MYSQL_USER): ~
+  env(MYSQL_PASSWORD): ~
   env(DB_PATH): ~
   locale: en
 
@@ -20,9 +20,9 @@ doctrine:
         driver:   "%env(DB_DRIVER)%"
         host:     "%env(DB_HOST)%"
         port:     "%env(DB_PORT)%"
-        dbname:   "%env(DB_NAME)%"
-        user:     "%env(DB_USER)%"
-        password: "%env(DB_PASSWORD)%"
+        dbname:   "%env(MYSQL_DATABASE)%"
+        user:     "%env(MYSQL_USER)%"
+        password: "%env(MYSQL_PASSWORD)%"
         path:     "%env(DB_PATH)%"
         charset: utf8mb4
         default_table_options:
