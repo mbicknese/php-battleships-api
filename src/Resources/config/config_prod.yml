@@ -1,3 +1,5 @@
 imports:
   - { resource: config.yml }
 
+parameters:
+  env(DB_DRIVER): pdo_mysql

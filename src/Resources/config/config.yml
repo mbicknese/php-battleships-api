@@ -3,9 +3,9 @@ parameters:
   env(DB_DRIVER): pdo_sqlite
   env(DB_HOST): ~
   env(DB_PORT): ~
-  env(DB_NAME): ~
-  env(DB_USER): ~
-  env(DB_PASSWORD): ~
+  env(MYSQL_DATABASE): ~
+  env(MYSQL_USER): ~
+  env(MYSQL_PASSWORD): ~
   env(DB_PATH): ~
   locale: en
 
@@ -17,7 +17,7 @@ doctrine:
     default_connection: default
     connections:
       default:
-        driver:   "pdo_mysql"
+        driver:   "%env(DB_DRIVER)%"
         host:     "%env(DB_HOST)%"
         port:     "%env(DB_PORT)%"
         dbname:   "%env(MYSQL_DATABASE)%"
